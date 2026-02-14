@@ -1,130 +1,273 @@
+```markdown
+Requirements – Starter Template
 
-# Requirements – Starter Template
+Project Name: PC+
+Team: Michael Ramcharitar, Eddy Arriaga-Barrientos
+Course: CSC 340
+Version: 1.0
+Date: 2026-02-08
 
-**Project Name:** PC+ \
-**Team:** Names and roles \
-**Course:** CSC 340\
-**Version:** 1.0\
-**Date:** 2026-01-30
 
----
+1. Overview
 
-## 1. Overview
-**Vision.** One or two sentences: who this is for, the core problem, and the outcome.
+Vision:
+PC+ is a web-based application that lets users browse a catalog of games, view detailed game pages, simulate purchasing games, and maintain a library of purchased games, while allowing publishers to manage game listings and respond to reviews.
 
-**Glossary** Terms used in the project
-- **Term 1:** description.
-- **Term 2:** description
 
-**Primary Users / Roles.**
-- **Customer (e.g., Student/Patient/Pet Owner/etc. )** — 1 line goal statement.
-- **Provider (e.g., Teacher/Doctor/Pet Sitter/etc. )** — 1 line goal statement.
-- **SysAdmin (optional)** — 1 line goal statement.
+Glossary (Terms used in the project):
 
-**Scope (this semester).**
-- <capability 1>
-- <capability 2>
-- <capability 3>
+Catalog:
+The collection of all games on the platform.
 
-**Out of scope (deferred).**
-- <deferred 1>
-- <deferred 2>
+Library:
+The list of games owned by a user after completing a simulated purchase.
 
-> This document is **requirements‑level** and solution‑neutral; design decisions (UI layouts, API endpoints, schemas) are documented separately.
+Simulated Checkout:
+The fictitious purchasing process that gives the user ownership of the purchased game.
 
----
+Provider:
+A publisher or developer who uploads and maintains games on the platform.
 
-## 2. Functional Requirements (User Stories)
-Write each story as: **As a `<role>`, I want `<capability>`, so that `<benefit>`.** Each story includes at least one **Given/When/Then** scenario.
+Customer:
+A user who browses, purchases (simulates) and reviews games.
 
-### 2.1 Customer Stories
-- **US‑CUST‑001 — <short title>**  
-  _Story:_ As a customer, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
 
-- **US‑CUST‑002 — <short title>**  
-  _Story:_ As a customer, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
+Primary Users / Roles:
 
-### 2.2 Provider Stories
-- **US‑PROV‑001 — <short title>**  
-  _Story:_ As a provider, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
+Customer:
+Browses for games, simulates purchasing games, maintains a library of purchased games, reviews games.
 
-- **US‑PROV‑002 — <short title>**  
-  _Story:_ As a provider, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
+Provider:
+Uploads and maintains games, views basic statistics, responds to reviews.
 
-### 2.3 SysAdmin Stories
-- **US‑ADMIN‑001 — <short title>**  
-  _Story:_ As a sysadmin, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
+SysAdmin (optional):
+Maintains system integrity and manages system-level settings.
 
-- **US‑ADMIN‑002 — <short title>**  
-  _Story:_ As a sysadmin, I want … so that …  
-  _Acceptance:_
-  ```gherkin
-  Scenario: <happy path>
-    Given <preconditions>
-    When  <action>
-    Then  <observable outcome>
-  ```
 
----
+Scope (this semester):
 
-## 3. Non‑Functional Requirements (make them measurable)
-- **Performance:** description 
-- **Availability/Reliability:** description
-- **Security/Privacy:** description
-- **Usability:** description
+- User registration, login and logout
+- Browsing a game catalog and viewing game details
+- Simulated purchase process
+- View and manage a library of purchased games
+- Customer reviews, provider responses
+- Game management by provider, basic statistics
 
----
 
-## 4. Assumptions, Constraints, and Policies
-- list any rules, policies, assumptions, etc.
+Out of Scope (deferred):
 
----
+- Real payment processing
+- Actual game download or DRM
+- Advanced recommendation algorithms
+- Social features beyond reviews
 
-## 5. Milestones (course‑aligned)
-- **M2 Requirements** — this file + stories opened as issues. 
-- **M3 High‑fidelity prototype** — core customer/provider flows fully interactive. 
-- **M4 Design** — architecture, schema, API outline. 
-- **M5 Backend API** — key endpoints + tests. 
-- **M6 Increment** — ≥2 use cases end‑to‑end. 
-- **M7 Final** — complete system & documentation. 
+This document is requirements-level.
+Design decisions (UI, API, schema) are documented separately.
 
----
 
-## 6. Change Management
-- Stories are living artifacts; changes are tracked via repository issues and linked pull requests.  
-- Major changes should update this SRS.
+2. Functional Requirements (User Stories)
+
+Each story follows the format:
+As a role, I want a capability, so that I receive a benefit.
+Each story will have at least one Given / When / Then acceptance scenario.
+
+
+2.1 Customer Stories
+
+
+US-CUST-001 – Register and Log In
+
+Story:
+As a customer, I want to register for an account and log in, so that I can manage my account and library of purchased games.
+
+Acceptance:
+Scenario: Register with valid credentials
+Given I am not logged in
+When I submit valid registration information
+Then my account is created and I am logged in
+
+
+
+US-CUST-002 – Browse Game Catalog
+
+Story:
+As a customer, I want to browse the catalog of available games so that I can choose which ones to purchase.
+
+Acceptance:
+Scenario: View game catalog
+Given games exist in the catalog
+When I view the catalog page
+Then I see a list of available games with titles, prices, and images
+
+
+
+US-CUST-003 – View Game Details
+
+Story:
+As a customer, I want to view the details of a specific game so that I can make an informed purchasing decision.
+
+Acceptance:
+Scenario: Open game detail page
+Given a game is selected from the catalog
+When I request to view the game details
+Then I see the game's description, price, images, and average rating
+
+US-CUST-004 – Simulated Purchase
+
+Story:
+As a customer, I want to purchase a game so that it is added to my library of purchased games.
+
+Acceptance:
+Scenario: Complete simulated purchase process
+Given I have selected a game to purchase
+When I complete the checkout process
+Then the game is added to my library of purchased games
+
+US-CUST-005 – Leave a Review
+
+Story:
+As a customer, I want to leave a review for a game I have purchased so that I can share my thoughts with other customers.
+
+Acceptance:
+Scenario: Submit a review for a game
+Given I have purchased the game
+When I submit a review for the game
+Then my review is displayed on the game's detail page
+
+
+2.2 Provider Stories
+
+
+US-PROV-001 – Manage Provider Profile
+
+Story:
+As a provider, I want to manage my provider profile so that my publisher details are up to date.
+
+Acceptance:
+Scenario: Update profile information
+Given I am logged in as a provider
+When I submit my updated profile information
+Then my profile information is updated
+
+
+US-PROV-002 – Add Game Listings
+
+Story:
+As a provider, I want to add new game listings to the catalog so that customers can purchase my games.
+
+Acceptance:
+Scenario: Add a new game listing
+Given I am logged in as a provider
+When I submit details for my new game including required fields
+Then it appears in the game catalog
+
+US-PROV-003 – View Game Statistics
+
+Story:
+As a provider, I want to view basic statistics about my games so that I can see how they are performing.
+
+Acceptance:
+Scenario: View statistics for my game
+Given my game is listed in the catalog
+When I access my game's statistics page
+Then I see information about download counts, ratings, and review totals
+
+US-PROV-004 – Respond to Reviews
+
+Story:
+As a provider, I want to respond to customer reviews so that I can address their concerns publicly.
+
+Acceptance:
+Scenario: Respond to a review from a customer
+Given there is an existing review for one of my games
+When I submit my response to the review
+Then it appears below the review on the game's detail page
+
+
+2.3 SysAdmin Stories
+
+
+US-ADMIN-001 – Moderate Reviews
+
+Story:
+As a SysAdmin, I want to moderate customer reviews on the site so that any inappropriate content is removed promptly.
+
+Acceptance:
+Scenario: Remove an inappropriate review
+Given a review violates site policies
+When I process its removal
+Then it is no longer displayed on the site
+
+US-ADMIN-002 – Manage User Accounts
+
+Story:
+As a SysAdmin, I want to manage user accounts on the site so that it remains secure for all users.
+
+Acceptance:
+Scenario: Remove an account belonging to a user violating site policies 
+Given a user has violated site policies 
+When I identify their account 
+Then their account is placed into an inactive state
+
+
+3. Non-Functional Requirements
+
+Performance / Usability:
+
+Pages must load within 2 seconds even under typical use by academic users.
+(If we set up separate testing accounts for instructors, we may allow more time.)
+
+Availability and Reliability:
+
+The system must be available 99 percent of the time for auditing purposes.
+We can negotiate what this means for reliability. (Internal testing?)
+
+Security and Privacy:
+
+All user authentication and accounts must be protected from unauthorized access.
+Do we care about subsequent attempts at misuse?
+
+Other:
+
+The system should be easy to use by anyone who has not used it before.
+A first-time user should be able to browse the system and simulate purchase of an item without external help.
+
+
+4. Assumptions, Constraints, and Policies
+
+We need to define explicit or implicit assumptions, constraints (if any), and policies regarding these functions.
+
+- Only registered and authenticated users can purchase products or leave reviews.
+- No real monetary transactions will take place.
+- Providers will only be able to manage products they themselves provided.
+- No limits on product availability or purchases per day / week / semester.
+- The app will only be used for educational purposes.
+
+
+5. Milestones (course-related)
+
+This will match course milestones yet to come.
+Use existing repository structures or create new ones as needed.
+
+
+M2 Requirements:
+This SRS opened as an issue.
+
+M3 High-fidelity Prototype: Core customer/provider functions are fully functional but not final.
+
+M4 Design Architecture & Schemas defined 
+
+M5 Backend API: Some key endpoints implemented. Unit tests defined. 
+
+M6 Increment: Use cases completed in any state needed for review  
+
+M7 Final: Complete system
+
+
+6. Change Management
+
+We create issues regarding alterations. Changes are reviewed and mergeable.
+If changes disrupt this requirement document's accuracy but are major,
+changes must also update this requirements document.
+
+This area contains any rules related to requirements management in general.
