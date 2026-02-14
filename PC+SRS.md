@@ -1,4 +1,3 @@
-```markdown
 Requirements – Starter Template
 
 Project Name: PC+
@@ -112,6 +111,8 @@ Given a game is selected from the catalog
 When I request to view the game details
 Then I see the game's description, price, images, and average rating
 
+
+
 US-CUST-004 – Simulated Purchase
 
 Story:
@@ -123,6 +124,8 @@ Given I have selected a game to purchase
 When I complete the checkout process
 Then the game is added to my library of purchased games
 
+
+
 US-CUST-005 – Leave a Review
 
 Story:
@@ -133,6 +136,33 @@ Scenario: Submit a review for a game
 Given I have purchased the game
 When I submit a review for the game
 Then my review is displayed on the game's detail page
+
+
+
+US-CUST-006 – View Purchased Library
+
+Story:
+As a customer, I want to view my purchased game library so that I can easily see the games I own.
+
+Acceptance:
+Scenario: View library
+Given I am logged in and have purchased games
+When I open my library page
+Then I see all games associated with my account
+
+
+
+US-CUST-007 – Prevent Duplicate Purchases
+
+Story:
+As a customer, I want the system to prevent me from purchasing the same game twice so that my library stays accurate.
+
+Acceptance:
+Scenario: Attempt duplicate purchase
+Given I already own a game
+When I attempt to purchase the same game again
+Then the system prevents the purchase and informs me that I already own the game
+
 
 
 2.2 Provider Stories
@@ -150,6 +180,7 @@ When I submit my updated profile information
 Then my profile information is updated
 
 
+
 US-PROV-002 – Add Game Listings
 
 Story:
@@ -160,6 +191,8 @@ Scenario: Add a new game listing
 Given I am logged in as a provider
 When I submit details for my new game including required fields
 Then it appears in the game catalog
+
+
 
 US-PROV-003 – View Game Statistics
 
@@ -172,6 +205,8 @@ Given my game is listed in the catalog
 When I access my game's statistics page
 Then I see information about download counts, ratings, and review totals
 
+
+
 US-PROV-004 – Respond to Reviews
 
 Story:
@@ -182,6 +217,33 @@ Scenario: Respond to a review from a customer
 Given there is an existing review for one of my games
 When I submit my response to the review
 Then it appears below the review on the game's detail page
+
+
+
+US-PROV-005 – Edit Existing Game Listing
+
+Story:
+As a provider, I want to edit an existing game listing so that I can update its price or description.
+
+Acceptance:
+Scenario: Update game listing
+Given I am logged in as a provider and own a listed game
+When I update the game information
+Then the changes are reflected in the catalog and detail page
+
+
+
+US-PROV-006 – Define System Requirements
+
+Story:
+As a provider, I want to define minimum system requirements for my game so that customers understand hardware expectations.
+
+Acceptance:
+Scenario: Add system requirements
+Given I am logged in as a provider and own a listed game
+When I submit minimum system requirements
+Then the requirements are saved and displayed on the game detail page
+
 
 
 2.3 SysAdmin Stories
@@ -198,6 +260,8 @@ Given a review violates site policies
 When I process its removal
 Then it is no longer displayed on the site
 
+
+
 US-ADMIN-002 – Manage User Accounts
 
 Story:
@@ -208,6 +272,20 @@ Scenario: Remove an account belonging to a user violating site policies
 Given a user has violated site policies 
 When I identify their account 
 Then their account is placed into an inactive state
+
+
+
+US-ADMIN-003 – Enforce Role-Based Access
+
+Story:
+As a SysAdmin, I want the system to enforce role-based access control so that users cannot perform actions outside their role.
+
+Acceptance:
+Scenario: Unauthorized action attempt
+Given a customer attempts to access provider-only functionality
+When the action is requested
+Then the system denies access
+
 
 
 3. Non-Functional Requirements
@@ -259,7 +337,7 @@ M4 Design Architecture & Schemas defined
 
 M5 Backend API: Some key endpoints implemented. Unit tests defined. 
 
-M6 Increment: Use cases completed in any state needed for review  
+M6 Increment: Use cases completed in any state needed for review  
 
 M7 Final: Complete system
 
