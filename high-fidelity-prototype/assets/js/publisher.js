@@ -296,7 +296,7 @@ function handleUploadForm() {
           requirements,
           description,
           updatedAt: new Date().toISOString(),
-          publisherName: "Eddy Studios",
+          publisherName: "EpicStudios",
           storeKey: makeStoreKey(title, id, games.length + 1),
           imagePath
         },
