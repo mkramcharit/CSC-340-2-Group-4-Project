@@ -1,0 +1,14 @@
+-- FROM THE MAKER OF THE GAME README, SEPARATE FROM WEBSITE --
+
+
+
+Dear Player,
+
+I'm glad you decided to download the old GiaB games pack, I hope you'll have a great time replaying the good old moments.
+
+All these games were made to be played in a web browser, using Adobe Flash Player, an obsolete browser plugin that might be banned from browsers forever any day now (as of March 2018).
+To make these games still playable, I've added a standalone Flash Player 29 (released by Adobe on 2018.III.13. - Windows, Mac and Linux versions) to this zip file. You can simply run the Flash Player on your desktop and drag-and-drop the swf file you'd like to play with into it.
+
+Please note that these games are many years old and not supported anymore in any way, no bugfixes will arrive and some paid contents might be unavailable when playing in the desktop Flash Player.
+
+Have fun!
