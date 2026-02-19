@@ -289,13 +289,13 @@
             <!-- Only displays numbers and they get updated by JavaScript -->
 
             <div id="discountRow" class="hidden flex items-center justify-between">
-              <span>Discount (TEALFIRE)</span>
+               <span>Discount (TEALFIRE)</span>
               <span id="sumDisc">-$0.00</span>
             </div>
             <!-- Hidden unless you apply the TEALFIRE discount code -->
 
             <div class="pt-2 border-t border-white/10 flex items-center justify-between font-semibold text-white">
-              <span>Total</span>
+              <span>Total (With Sales Tax)</span>
               <span id="sumTotal">$0.00</span>
             </div>
             <!-- Only displays numbers and they get updated by JavaScript -->
@@ -565,7 +565,7 @@
       const disc = (loadDiscount() === "TEALFIRE") ? subtotal * 0.15 : 0;
       /* 15% off for discount only available if user inputs TEALFIRE */
 
-      const total = Math.max(0, subtotal - disc);
+      const total = Math.max(0, subtotal - disc + 1.25);
       /* Cannot go below $0 */
 
       return { subtotal, disc, total };
