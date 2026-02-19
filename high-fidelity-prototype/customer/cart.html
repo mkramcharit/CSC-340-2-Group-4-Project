@@ -57,11 +57,178 @@
 
   <style>
     :root { --mx: 0; --my: 0; }
+<!doctype html>
+<!-- This tells the browser we are using modern HTML (HTML5) -->
+
+<html lang="en">
+<!-- This is the root element of the page -->
+
+<head>
+  <!-- The head holds “page setup” stuff that the user usually does not see -->
+
+  <meta charset="UTF-8" />
+  <!-- We use UTF-8 character encoding to display all text symbols correctly -->
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- This sets the viewport parameters for correct scaling on mobile devices -->
+
+  <title>PC+ | Cart</title>
+  <!-- This is the site name that appears on the browser tab -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Loads Tailwind CSS from a CDN to style the site
+       Tailwind class names are explained in the README file -->
+
+  <script>
+    /* Tailwind normally uses a separate JavaScript config file
+       I’m instead including it inline to keep everything in one HTML file */
+
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /* Custom teal palette used throughout the site */
+            teal0: "#041a1a",
+            teal1: "#062626",
+            teal2: "#083535",
+            teal3: "#0b4747",
+
+            /* Semi-transparent panel colors for “glass” UI look */
+            panel: "rgba(255,255,255,.06)",
+            stroke: "rgba(255,255,255,.10)",
+
+            /* Accent color for buttons and highlights */
+            accent: "#ff7a18"
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <!-- Preconnect to the Google Fonts domain to speed up font loading -->
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Preconnect to Google’s font file domain with cross-origin permissions -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Yuji+Mai&display=swap" rel="stylesheet" />
+  <!-- Imports the Yuji Mai font from Google Fonts library -->
+
+  <style>
+    :root { --mx: 0; --my: 0; }
 
     html {
       background: #041a1a;
       overscroll-behavior: none;
     }
+    /* :root selector is where you store CSS variables that can be used anywhere in the code */
+
+    body {
+      font-family: "Yuji Mai", system-ui, sans-serif;
+      /* Font family list starts with the imported font then falls back to system fonts */
+
+      letter-spacing: .35px;
+      /* All the letters in words have a small spacing between them */
+
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(255,122,24,.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 35%, rgba(0,255,200,.10), transparent 60%),
+        linear-gradient(120deg, #041a1a, #083535, #062626, #0b4747);
+      /* Multiple backgrounds are stacked on top of one another with different blending */
+
+      background-size: 100% 100%, 100% 100%, 300% 300%;
+      /* Background size controls how much of each background is visible at once */
+
+      animation: bg 8s ease-in-out infinite alternate;
+      /* Slight animation makes the background slowly shift over time */
+    }
+
+    @keyframes bg {
+      0%   { background-position: 0 0, 0 0, 0% 50%; }
+      100% { background-position: 0 0, 0 0, 100% 50%; }
+    }
+    /* @keyframes defines how an animation changes over several steps */
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    /* A class for a semi-transparent panel that has a subtle gradient, blurs what’s behind it, and a faint border around it */
+
+    .shine {
+      position: relative;
+      overflow: hidden;
+    }
+    /* Used with cards, the position sets up relative positioning for its child elements
+       Overflow hides anything drawn outside of the card’s border radius */
+
+    .shine:before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      opacity: 0;
+      transition: opacity .18s;
+      pointer-events: none;
+
+      background: radial-gradient(
+        60px 60px at var(--mx) var(--my),
+        rgba(255,255,255,.10),
+        transparent 70%
+      );
+    }
+    /* Is a transparent overlay that’s invisible by default
+       It uses the CSS variables in conjunction with other styles to create the glow being where the mouse is */
+
+    .shine:hover:before { opacity: .25; }
+    /* When you hover over a card, slightly shows the above element */
+  </style>
+</head>
+
+<body class="min-h-screen text-white selection:bg-accent/30 selection:text-white">
+  <!-- Makes the body take up the whole screen and sets general text color
+       Changes highlighted text color when you select text with your cursor -->
+
+  <div
+    id="cursorGlow"
+    class="pointer-events-none fixed left-0 top-0 rounded-full"
+    style="
+      width:0.12rem;
+      height:0.12rem;
+      opacity:0.035;
+      filter:blur(2px);
+      transform:translate(-50%,-50%);
+      background:radial-gradient(circle,rgba(255,122,24,.55),rgba(0,255,200,.25),transparent 72%);
+    "
+  ></div>
+  <!-- A tiny fixed element that follows your cursor on the screen
+       Uses inline style due to dynamic CSS styles -->
+
+  <div
+    id="toast"
+    class="pointer-events-none fixed bottom-6 left-1/2 z-[60] hidden -translate-x-1/2 rounded-2xl border border-white/10 bg-black/40 px-4 py-2 text-sm text-white/90 backdrop-blur-xl"
+  ></div>
+  <!-- A small pop-up message box relative to the body. It’s hidden by default.
+       Z index puts it on top of other elements. Translates x-axis so it’s centered
+       Gets disabled mouse pointer events so it doesn’t interfere with other UI elements -->
+
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
+    <!-- Sticky makes this static relative to other elements
+         It maintains its position on screen when scrolling
+         Z index allows it to be in front of other components -->
+
+    <div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4">
+      <!-- Sets all child element width and spacing -->
+
+      <a class="font-semibold tracking-tight hover:text-white/90 transition" href="customer-home.html">
+        PC<span class="text-accent">+</span>
+      </a>
+      <!-- Site logo and home link. The plus uses accent color -->
+
+      <nav class="ml-2 flex flex-1 items-center gap-1 text-sm text-white/80">
+        <!-- Space reserved for Search input -->
+
     /* :root selector is where you store CSS variables that can be used anywhere in the code */
 
     body {
@@ -178,6 +345,172 @@
         <a id="navPubManage" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/manage-games.html">Manage Games</a>
         <a id="navPubUpload" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/upload-game.html">Upload Game</a>
         <a id="navPubProfile" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/publisher-profile.html">Profile</a>
+
+        <div class="ml-auto hidden sm:flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+          <svg class="h-4 w-4 text-white/70" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <!-- Magnifying glass icon -->
+
+          <input
+            id="searchBox"
+            class="w-56 bg-transparent text-sm outline-none placeholder:text-white/40"
+            placeholder="Search cart..."
+          />
+          <!-- Input element lets user filter cart items in real-time -->
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-10">
+    <!-- Main element holds all main content for the page -->
+
+    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <!-- Page title and buttons go here -->
+
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight">Cart</h1>
+        <p id="subLine" class="mt-2 text-white/70 text-sm"></p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Container for action buttons on the right of the page -->
+
+        <button
+          id="btnClear"
+          class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition hidden"
+        >
+          Clear
+        </button>
+        <!-- The “Clear” button removes all items from your cart. It’s hidden until there are items in your cart -->
+
+        <a
+          href="customer-home.html"
+          class="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+        >
+          Keep Shopping
+        </a>
+        <!-- Link back to store, or other parts of site go here -->
+      </div>
+    </div>
+
+    <section class="grid gap-5 lg:grid-cols-12">
+      <!-- Main layout split your cart and checkout summary -->
+
+      <!-- On large displays it becomes 12 column grid -->
+
+      <div class="lg:col-span-8">
+        <!-- Your cart area takes up 8/12 columns which is 66% -->
+
+        <section id="emptyState" class="glass rounded-3xl p-6 hidden">
+          <!-- It becomes a flex container so all child elements have a row layout -->
+
+          <!-- Empty cart message is hidden by default and shows when your cart is empty -->
+
+          <p class="text-xs tracking-widest text-white/60">EMPTY</p>
+          <h2 class="mt-2 text-xl font-semibold tracking-tight">Your cart is empty.</h2>
+          <p class="mt-2 text-sm text-white/70">Add games from Home or Details to see them here.</p>
+
+          <div class="mt-4 flex items-center gap-3">
+            <a
+              href="customer-home.html"
+              class="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+            >
+              Browse
+            </a>
+            <!-- Lets you go browse games to fill your cart -->
+          </div>
+        </section>
+
+        <div id="list" class="grid gap-5"></div>
+        <!-- Where all cart item cards get inserted by JavaScript -->
+      </div>
+
+      <aside class="lg:col-span-4">
+        <!-- Takes up 4/12 which is 33% on large screens -->
+
+        <div class="glass rounded-3xl p-6">
+          <!-- Container for your checkout summary card -->
+
+          <p class="text-xs tracking-widest text-white/60">SUMMARY</p>
+
+          <div class="mt-3 space-y-2 text-sm text-white/75">
+            <!-- Displays your number of items, subtotal, discount, and total fields -->
+
+            <div class="flex items-center justify-between">
+              <span>Items</span>
+              <span id="sumItems">0</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+
+            <div class="flex items-center justify-between">
+              <span>Subtotal</span>
+              <span id="sumSub">$0.00</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+
+            <div id="discountRow" class="hidden flex items-center justify-between">
+              <span>Discount (TEALFIRE)</span>
+              <span id="sumDisc">-$0.00</span>
+            </div>
+            <!-- Hidden unless you apply the TEALFIRE discount code -->
+
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between font-semibold text-white">
+              <span>Total</span>
+              <span id="sumTotal">$0.00</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <!-- Discount code input area inside a grid row layout -->
+
+            <p class="text-xs tracking-widest text-white/60">DISCOUNT CODE</p>
+
+            <div class="mt-3 flex gap-2">
+              <input
+                id="codeInput"
+                class="w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none placeholder:text-white/40 focus:border-white/20"
+                placeholder="Enter code (ex: TEALFIRE)"
+              />
+              <!-- Input lets you enter a code to get discounts on your purchase -->
+
+              <button
+                id="btnApply"
+                class="shrink-0 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+              >
+                Apply
+              </button>
+              <!-- Button applies code and saves it to local storage -->
+            </div>
+
+            <p id="codeMsg" class="mt-2 text-xs text-white/60"></p>
+            <!-- Area where you get discount hints and errors -->
+          </div>
+
+          <button
+            id="btnCheckout"
+            class="mt-5 w-full rounded-2xl bg-accent px-5 py-3 text-sm font-semibold text-white hover:brightness-110 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Checkout
+          </button>
+          <!-- Lets you check out in one swift move. It gets disabled when your cart is empty -->
+
+          <p class="mt-3 text-xs text-white/60">
+            Checkout moves items into your Library instantly (login required).
+          </p>
+          <!-- Small explanation text -->
+        </div>
+      </aside>
+    </section>
+  </main>
+
 
         <div class="ml-auto hidden sm:flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
           <svg class="h-4 w-4 text-white/70" viewBox="0 0 24 24" fill="none">
