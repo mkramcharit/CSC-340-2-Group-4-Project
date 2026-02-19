@@ -564,7 +564,7 @@
       const disc = (loadDiscount() === "TEALFIRE") ? subtotal * 0.15 : 0;
       /* 15% off for discount only available if user inputs TEALFIRE */
 
-      const total = Math.max(0, 1.25 + (subtotal - disc));
+      const total = Math.max(0, (subtotal - disc));
       /* Cannot go below $0 */
 
       return { subtotal, disc, total };
