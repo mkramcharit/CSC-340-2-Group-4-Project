@@ -28,3 +28,5 @@ high-fidelity-prototype/
 .DS_Store
 .playwright-cli/
 test-results/
+pc-plus/
+__MACOSX/
