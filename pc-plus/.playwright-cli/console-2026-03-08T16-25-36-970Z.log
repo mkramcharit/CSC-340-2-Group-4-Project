@@ -1,5 +1,0 @@
-Total messages: 2 (Errors: 1, Warnings: 1)
-Returning 1 messages for level "error"
-
-ReferenceError: saveDiscount is not defined
-    at document.getElementById.onclick (http://localhost:3000/customer/cart.html:766:9)

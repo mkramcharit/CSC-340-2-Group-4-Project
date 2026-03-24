@@ -1,4 +1,0 @@
-Total messages: 4 (Errors: 1, Warnings: 2)
-Returning 1 messages for level "error"
-
-[ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8080/api/publisher/profile:0

@@ -1,5 +1,0 @@
-[     347ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63
-[     604ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:3000/favicon.ico:0
-[   18389ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8080/api/auth/login:0
-[   18389ms] [WARNING] [PC+ API] Backend unreachable: http://localhost:8080/api/auth/login 
-→ Is the Spring Boot backend running? Run: cd pcplus-backend && mvn spring-boot:run Failed to fetch @ http://localhost:3000/assets/js/api.js:85
