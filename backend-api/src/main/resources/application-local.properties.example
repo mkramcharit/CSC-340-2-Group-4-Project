@@ -1,0 +1,6 @@
+# Copy this file to application-local.properties and fill with your Neon values.
+# Keep application-local.properties untracked.
+
+NEON_DB_URL=jdbc:postgresql://YOUR_NEON_HOST/neondb?sslmode=require
+NEON_DB_USERNAME=neondb_owner
+NEON_DB_PASSWORD=YOUR_NEON_PASSWORD
