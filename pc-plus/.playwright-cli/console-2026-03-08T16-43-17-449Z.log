@@ -1,0 +1,6 @@
+Total messages: 12 (Errors: 2, Warnings: 3)
+Returning 2 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:3000/favicon.ico:0
+Error: Login required
+    at http://localhost:3000/customer/profile.html:276:13

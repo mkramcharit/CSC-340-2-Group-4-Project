@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Listing — PC+</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body>
+  <script>
+    if (window.PCPlusAuth && !window.PCPlusAuth.requireRole("publisher", "../customer/login.html")) {
+      throw new Error("Publisher role required");
+    }
+  </script>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../customer/customer-home.html">PC<span class="plus">+</span></a>
+      <nav class="nav" id="pubNav">
+        <a href="../customer/customer-home.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="manage-games.html">Manage Games</a>
+        <a href="upload-game.html">Upload Game</a>
+        <a href="../customer/profile.html">Profile</a>
+      </nav>
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" placeholder="Search games..." />
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="h1">Edit Listing</h1>
+    <p class="sub">Save updates the storefront too (prototype).</p>
+
+    <div class="card">
+      <form id="editForm" class="form">
+        <div class="grid">
+          <div class="col-8">
+            <label for="title">Title</label>
+            <input id="title" name="title" required />
+          </div>
+          <div class="col-4">
+            <label for="price">Price ($)</label>
+            <input id="price" name="price" type="number" step="0.01" min="0" required />
+          </div>
+          <div class="col-4">
+            <label for="genre">Genre</label>
+            <select id="genre" name="genre">
+              <option>Action</option>
+              <option>RPG</option>
+              <option>Racing</option>
+              <option>Strategy</option>
+              <option>Horror</option>
+              <option>Indie</option>
+              <option>FPS</option>
+              <option>Open World</option>
+              <option>Tower Defense</option>
+              <option>Sandbox</option>
+              <option>Metroidvania</option>
+              <option>Shooter</option>
+            </select>
+          </div>
+          <div class="col-8">
+            <label for="requirements">System Requirements</label>
+            <input id="requirements" name="requirements" required />
+          </div>
+          <div class="col-12">
+            <label for="imagePath">Image Filename</label>
+            <input id="imagePath" name="imagePath" placeholder="imagename.jpg (from assets/img/)" />
+            <p class="small" style="margin-top:6px;">Type just the filename from <strong>assets/img/</strong></p>
+          </div>
+          <div class="col-12">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required></textarea>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:4px;">
+          <button class="btn primary" type="submit">Save Changes</button>
+          <a class="btn" href="manage-games.html">Cancel</a>
+          <a class="btn ghost" href="../customer/customer-home.html">View Storefront</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <div class="toast"></div>
+  <script src="../assets/js/publisher.js"></script>
+  <script>
+    document.getElementById("navToggle").addEventListener("click", function() {
+      document.getElementById("pubNav").classList.toggle("open");
+    });
+  </script>
+</body>
+</html>

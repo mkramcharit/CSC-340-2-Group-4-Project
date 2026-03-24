@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "PC+" [ref=e4] [cursor=pointer]:
+        - /url: ../customer/customer-home.html
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: ../customer/customer-home.html
+        - link "Dashboard" [ref=e7] [cursor=pointer]:
+          - /url: dashboard.html
+        - link "Manage Games" [ref=e8] [cursor=pointer]:
+          - /url: manage-games.html
+        - link "Upload Game" [ref=e9] [cursor=pointer]:
+          - /url: upload-game.html
+        - link "Profile" [ref=e10] [cursor=pointer]:
+          - /url: publisher-profile.html
+        - link "Logged in 🦊" [ref=e11] [cursor=pointer]:
+          - /url: ../customer/login.html
+  - main [ref=e12]:
+    - heading "Dashboard" [level=1] [ref=e13]
+    - paragraph [ref=e14]: Quick stats + recent updates for your game listings
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Total Games" [level=3] [ref=e17]
+        - generic [ref=e18]: "0"
+        - generic [ref=e19]: Listings currently live
+      - generic [ref=e20]:
+        - heading "Estimated Sales" [level=3] [ref=e21]
+        - generic [ref=e22]: $0.00
+        - generic [ref=e23]: From completed customer checkouts
+      - generic [ref=e24]:
+        - heading "Last Updated" [level=3] [ref=e25]
+        - generic [ref=e26]: —
+        - generic [ref=e27]: Most recent listing change
+      - generic [ref=e28]:
+        - heading "Recent Activity" [level=3] [ref=e29]
+        - list
+        - separator [ref=e30]
+        - generic [ref=e31]:
+          - link "Upload a game" [ref=e32] [cursor=pointer]:
+            - /url: upload-game.html
+          - link "Manage game listings" [ref=e33] [cursor=pointer]:
+            - /url: manage-games.html
+          - link "Home" [ref=e34] [cursor=pointer]:
+            - /url: ../customer/customer-home.html

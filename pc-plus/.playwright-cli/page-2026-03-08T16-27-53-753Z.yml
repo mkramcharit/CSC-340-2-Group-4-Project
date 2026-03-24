@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "PC+" [ref=e4] [cursor=pointer]:
+        - /url: ../customer/customer-home.html
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: ../customer/customer-home.html
+        - link "Dashboard" [ref=e7] [cursor=pointer]:
+          - /url: dashboard.html
+        - link "Manage Games" [ref=e8] [cursor=pointer]:
+          - /url: manage-games.html
+        - link "Upload Game" [ref=e9] [cursor=pointer]:
+          - /url: upload-game.html
+        - link "Profile" [ref=e10] [cursor=pointer]:
+          - /url: publisher-profile.html
+        - link "Logged in 🦊" [ref=e11] [cursor=pointer]:
+          - /url: ../customer/login.html
+  - main [ref=e12]:
+    - heading "Profile" [level=1] [ref=e13]
+    - paragraph [ref=e14]: Account settings (prototype only).
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Publisher Info" [level=3] [ref=e17]
+        - paragraph [ref=e18]: Placeholder data for UI demo.
+        - separator [ref=e19]
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]: Display Name
+            - textbox [ref=e23]: EpicStudios
+          - generic [ref=e24]:
+            - generic [ref=e25]: Email
+            - textbox [ref=e26]: test@test.com
+          - button "Save" [ref=e28] [cursor=pointer]
+      - generic [ref=e29]:
+        - heading "Store Settings" [level=3] [ref=e30]
+        - paragraph [ref=e31]: Visual controls only.
+        - separator [ref=e32]
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - generic [ref=e35]: Payout Method
+            - combobox [ref=e36]:
+              - option "Via Bank Transfer" [selected]
+              - option "Via PayPal"
+          - generic [ref=e37]:
+            - generic [ref=e38]: Support Contact
+            - textbox [ref=e39]: support@example.com
+          - generic [ref=e40]:
+            - link "Back to Dashboard" [ref=e41] [cursor=pointer]:
+              - /url: dashboard.html
+            - link "Home" [ref=e42] [cursor=pointer]:
+              - /url: ../customer/customer-home.html

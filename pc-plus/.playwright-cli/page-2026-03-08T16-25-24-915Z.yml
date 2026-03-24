@@ -1,0 +1,54 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "PC+" [ref=e4] [cursor=pointer]:
+        - /url: customer-home.html
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: customer-home.html
+        - link "Library" [ref=e7] [cursor=pointer]:
+          - /url: library.html
+        - link "Cart" [ref=e8] [cursor=pointer]:
+          - /url: cart.html
+        - link "Profile" [ref=e9] [cursor=pointer]:
+          - /url: profile.html
+        - link "Logged in 🦊" [ref=e10] [cursor=pointer]:
+          - /url: login.html
+        - generic [ref=e11]:
+          - img [ref=e12]
+          - textbox "Search cart..." [active] [ref=e14]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Cart" [level=1] [ref=e18]
+        - paragraph [ref=e19]: No items yet.
+      - link "Keep Shopping" [ref=e21] [cursor=pointer]:
+        - /url: customer-home.html
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: EMPTY
+        - heading "Your cart is empty." [level=2] [ref=e26]
+        - paragraph [ref=e27]: Add games from Home or Details to see them here.
+        - link "Browse" [ref=e29] [cursor=pointer]:
+          - /url: customer-home.html
+      - complementary [ref=e30]:
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: SUMMARY
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: Items
+              - generic [ref=e36]: "0"
+            - generic [ref=e37]:
+              - generic [ref=e38]: Subtotal
+              - generic [ref=e39]: $0.00
+            - generic [ref=e40]:
+              - generic [ref=e41]: Total
+              - generic [ref=e42]: $0.00
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: DISCOUNT CODE
+            - generic [ref=e45]:
+              - 'textbox "Enter code (ex: TEALFIRE)" [ref=e46]'
+              - button "Apply" [ref=e47] [cursor=pointer]
+            - paragraph [ref=e48]: "Try: TEALFIRE"
+          - button "Checkout" [disabled] [ref=e49]
+          - paragraph [ref=e50]: Checkout moves items into your Library instantly (login required).
