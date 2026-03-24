@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Publisher Profile</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/auth.js"></script>
+  </head>
+  <body>
+    <!-- Publisher-only guard: redirect non-publisher sessions to login -->
+    <script>
+      if (window.PCPlusAuth && !window.PCPlusAuth.requireRole("publisher", "../customer/login.html")) {
+        throw new Error("Publisher role required");
+      }
+    </script>
+  <!-- Shared publisher top navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../customer/customer-home.html">PC<span class="plus">+</span></a>
+      <nav class="nav">
+        <a href="../customer/customer-home.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="manage-games.html">Manage Games</a>
+        <a href="upload-game.html">Upload Game</a>
+        <a href="publisher-profile.html">Profile</a>
+      </nav>
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" placeholder="Search games..." />
+      </div>
+    </div>
+  </header>
+
+    <!-- Profile and store settings prototype forms -->
+    <main class="container">
+      <h1 class="h1">Profile</h1>
+      <p class="sub">Account settings (prototype only).</p>
+
+      <div class="grid">
+        <div class="card" style="grid-column: span 6">
+          <h3>Publisher Info</h3>
+          <p class="muted" style="margin-top: 0">
+            Placeholder data for UI demo.
+          </p>
+          <hr class="sep" />
+          <div class="form">
+            <div>
+              <label>Display Name</label>
+              <input value="EpicStudios" />
+            </div>
+            <div>
+              <label>Email</label>
+              <input value="test@test.com" />
+            </div>
+            <div class="actions">
+              <button
+                class="btn primary"
+                type="button"
+                onclick="
+                  document.querySelector('.toast').classList.add('show');
+                  setTimeout(
+                    () =>
+                      document.querySelector('.toast').classList.remove('show'),
+                    2000,
+                  );
+                "
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: span 6">
+          <h3>Store Settings</h3>
+          <p class="muted" style="margin-top: 0">Visual controls only.</p>
+          <hr class="sep" />
+          <div class="form">
+            <div>
+              <label>Payout Method</label>
+              <select>
+                <option>Via Bank Transfer</option>
+                <option>Via PayPal</option>
+              </select>
+            </div>
+            <div>
+              <label>Support Contact</label>
+              <input value="support@example.com" />
+            </div>
+            <div class="actions">
+              <a class="btn" href="dashboard.html">Back to dashboard</a>
+              <a class="btn ghost" href="../customer/customer-home.html">Home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast messages used by profile save actions -->
+    <div class="toast">Saved.</div>
+    <script src="../assets/js/publisher.js"></script>
+  </body>
+</html>

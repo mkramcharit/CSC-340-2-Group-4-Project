@@ -1,0 +1,370 @@
+@import url("https://fonts.googleapis.com/css2?family=Yuji+Mai&display=swap");
+
+/* Theme palette shared across publisher pages. */
+:root {
+  --bg0: #21100d;
+  --bg1: #371813;
+  --bg2: #54221a;
+  --bg3: #7a2f20;
+  --text: #fff6ed;
+  --muted: #e6cab7;
+  --accent: #38e6c8;
+  --accent-soft: rgba(56, 230, 200, 0.22);
+  --danger: #ff8b8b;
+  --ok: #6af0b8;
+  --border: rgba(255, 255, 255, 0.16);
+  --panel: rgba(255, 255, 255, 0.08);
+}
+
+/* Base reset + page background. */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg0);
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  font-family: "Yuji Mai", system-ui, sans-serif;
+  letter-spacing: 0.35px;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 15% 20%, rgba(56, 230, 200, 0.16), transparent 55%),
+    radial-gradient(900px 600px at 85% 30%, rgba(255, 185, 120, 0.18), transparent 60%),
+    linear-gradient(120deg, var(--bg0), var(--bg2), var(--bg1), var(--bg3));
+  background-size: 100% 100%, 100% 100%, 300% 300%;
+  animation: bg 14s ease-in-out infinite alternate;
+}
+
+/* Keep all nested text/controls on the same site font. */
+body * {
+  font-family: inherit;
+}
+
+@keyframes bg {
+  0% {
+    background-position: 0 0, 0 0, 0% 50%;
+  }
+  100% {
+    background-position: 0 0, 0 0, 100% 50%;
+  }
+}
+
+/* Core layout shells. */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 20px 56px;
+}
+
+/* Sticky topbar + nav. */
+.topbar {
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 50;
+}
+
+.topbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.plus {
+  color: #ff7a18;
+}
+
+.nav {
+  margin-left: 8px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nav a,
+.nav-login-state {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.nav a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav a:hover,
+.nav-login-state:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Header search area. */
+.search-box {
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 8px 12px;
+  min-width: 320px;
+}
+
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.search-icon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Publisher page typographic helpers. */
+.h1 {
+  font-size: 34px;
+  margin: 14px 0 6px;
+}
+
+.sub {
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+/* Grid and glass-card building blocks. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.card h3 {
+  margin: 0 0 8px;
+}
+
+.kpi {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+hr.sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+/* Buttons and grouped actions. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, rgba(56, 230, 200, 0.26), rgba(56, 230, 200, 0.12));
+  border-color: rgba(56, 230, 200, 0.44);
+}
+
+.btn.danger {
+  background: rgba(255, 139, 139, 0.12);
+  border-color: rgba(255, 139, 139, 0.35);
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Table styles for manage page. */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.table th,
+.table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.pill.live {
+  border-color: rgba(106, 240, 184, 0.35);
+  color: var(--ok);
+  background: rgba(106, 240, 184, 0.09);
+}
+
+/* Form controls for upload/edit/profile pages. */
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  outline: none;
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(56, 230, 200, 0.6);
+  box-shadow: 0 0 0 2px rgba(56, 230, 200, 0.18);
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* Toast + small helper text. */
+.toast {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(34, 14, 11, 0.88);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 14px;
+  display: none;
+  max-width: 360px;
+}
+
+.toast.show {
+  display: block;
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Keep publisher search input sizing aligned with customer header search. */
+.topbar .search-box input,
+.topbar .search-box input:focus {
+  width: 14rem;
+  border: 0;
+  outline: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive behavior. */
+@media (min-width: 640px) {
+  .search-box {
+    display: flex;
+  }
+}

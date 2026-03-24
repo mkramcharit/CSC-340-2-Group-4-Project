@@ -1,0 +1,758 @@
+<!doctype html>
+<!-- This tells the browser we are using modern HTML (HTML5) -->
+
+<html lang="en">
+<!-- This is the root element of the page -->
+
+<head>
+  <!-- The head holds “page setup” stuff that the user usually does not see -->
+
+  <meta charset="UTF-8" />
+  <!-- We use UTF-8 character encoding to display all text symbols correctly -->
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- This sets the viewport parameters for correct scaling on mobile devices -->
+
+  <title>PC+ | Cart</title>
+  <!-- This is the site name that appears on the browser tab -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Loads Tailwind CSS from a CDN to style the site
+       Tailwind class names are explained in the README file -->
+
+  <script>
+    /* Tailwind normally uses a separate JavaScript config file
+       I’m instead including it inline to keep everything in one HTML file */
+
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /* Custom teal palette used throughout the site */
+            teal0: "#041a1a",
+            teal1: "#062626",
+            teal2: "#083535",
+            teal3: "#0b4747",
+
+            /* Semi-transparent panel colors for “glass” UI look */
+            panel: "rgba(255,255,255,.06)",
+            stroke: "rgba(255,255,255,.10)",
+
+            /* Accent color for buttons and highlights */
+            accent: "#ff7a18"
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <!-- Preconnect to the Google Fonts domain to speed up font loading -->
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Preconnect to Google’s font file domain with cross-origin permissions -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Yuji+Mai&display=swap" rel="stylesheet" />
+  <!-- Imports the Yuji Mai font from Google Fonts library -->
+
+  <style>
+    :root { --mx: 0; --my: 0; }
+
+    html {
+      background: #041a1a;
+      overscroll-behavior: none;
+    }
+    /* :root selector is where you store CSS variables that can be used anywhere in the code */
+
+    body {
+      font-family: "Yuji Mai", system-ui, sans-serif;
+      /* Font family list starts with the imported font then falls back to system fonts */
+
+      letter-spacing: .35px;
+      /* All the letters in words have a small spacing between them */
+
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(255,122,24,.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 35%, rgba(0,255,200,.10), transparent 60%),
+        linear-gradient(120deg, #041a1a, #083535, #062626, #0b4747);
+      /* Multiple backgrounds are stacked on top of one another with different blending */
+
+      background-size: 100% 100%, 100% 100%, 300% 300%;
+      /* Background size controls how much of each background is visible at once */
+
+      animation: bg 8s ease-in-out infinite alternate;
+      /* Slight animation makes the background slowly shift over time */
+    }
+
+    @keyframes bg {
+      0%   { background-position: 0 0, 0 0, 0% 50%; }
+      100% { background-position: 0 0, 0 0, 100% 50%; }
+    }
+    /* @keyframes defines how an animation changes over several steps */
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    /* A class for a semi-transparent panel that has a subtle gradient, blurs what’s behind it, and a faint border around it */
+
+    .shine {
+      position: relative;
+      overflow: hidden;
+    }
+    /* Used with cards, the position sets up relative positioning for its child elements
+       Overflow hides anything drawn outside of the card’s border radius */
+
+    .shine:before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      opacity: 0;
+      transition: opacity .18s;
+      pointer-events: none;
+
+      background: radial-gradient(
+        60px 60px at var(--mx) var(--my),
+        rgba(255,255,255,.10),
+        transparent 70%
+      );
+    }
+    /* Is a transparent overlay that’s invisible by default
+       It uses the CSS variables in conjunction with other styles to create the glow being where the mouse is */
+
+    .shine:hover:before { opacity: .25; }
+    /* When you hover over a card, slightly shows the above element */
+  </style>
+</head>
+
+<body class="min-h-screen text-white selection:bg-accent/30 selection:text-white">
+  <!-- Makes the body take up the whole screen and sets general text color
+       Changes highlighted text color when you select text with your cursor -->
+
+  <div
+    id="cursorGlow"
+    class="pointer-events-none fixed left-0 top-0 rounded-full"
+    style="
+      width:0.12rem;
+      height:0.12rem;
+      opacity:0.035;
+      filter:blur(2px);
+      transform:translate(-50%,-50%);
+      background:radial-gradient(circle,rgba(255,122,24,.55),rgba(0,255,200,.25),transparent 72%);
+    "
+  ></div>
+  <!-- A tiny fixed element that follows your cursor on the screen
+       Uses inline style due to dynamic CSS styles -->
+
+  <div
+    id="toast"
+    class="pointer-events-none fixed bottom-6 left-1/2 z-[60] hidden -translate-x-1/2 rounded-2xl border border-white/10 bg-black/40 px-4 py-2 text-sm text-white/90 backdrop-blur-xl"
+  ></div>
+  <!-- A small pop-up message box relative to the body. It’s hidden by default.
+       Z index puts it on top of other elements. Translates x-axis so it’s centered
+       Gets disabled mouse pointer events so it doesn’t interfere with other UI elements -->
+
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
+    <!-- Sticky makes this static relative to other elements
+         It maintains its position on screen when scrolling
+         Z index allows it to be in front of other components -->
+
+    <div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4">
+      <!-- Sets all child element width and spacing -->
+
+      <a class="font-semibold tracking-tight hover:text-white/90 transition" href="customer-home.html">
+        PC<span class="text-accent">+</span>
+      </a>
+      <!-- Site logo and home link. The plus uses accent color -->
+
+      <nav class="ml-2 flex flex-1 items-center gap-1 text-sm text-white/80">
+        <!-- Space reserved for Search input -->
+
+        <a id="navHome" class="rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="customer-home.html">Home</a>
+        <a id="navLibrary" class="rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="library.html">Library</a>
+        <a id="navCart" class="rounded-lg px-3 py-2 bg-white/10 text-white transition" href="cart.html">Cart</a>
+        <a id="navLogin" class="rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="login.html">Login</a>
+        <a id="navPubDashboard" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/dashboard.html">Dashboard</a>
+        <a id="navPubManage" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/manage-games.html">Manage Games</a>
+        <a id="navPubUpload" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/upload-game.html">Upload Game</a>
+        <a id="navPubProfile" class="hidden rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white transition" href="../publisher/publisher-profile.html">Profile</a>
+
+        <div class="ml-auto hidden sm:flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+          <svg class="h-4 w-4 text-white/70" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <!-- Magnifying glass icon -->
+
+          <input
+            id="searchBox"
+            class="w-56 bg-transparent text-sm outline-none placeholder:text-white/40"
+            placeholder="Search cart..."
+          />
+          <!-- Input element lets user filter cart items in real-time -->
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-10">
+    <!-- Main element holds all main content for the page -->
+
+    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <!-- Page title and buttons go here -->
+
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight">Cart</h1>
+        <p id="subLine" class="mt-2 text-white/70 text-sm"></p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Container for action buttons on the right of the page -->
+
+        <button
+          id="btnClear"
+          class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition hidden"
+        >
+          Clear
+        </button>
+        <!-- The “Clear” button removes all items from your cart. It’s hidden until there are items in your cart -->
+
+        <a
+          href="customer-home.html"
+          class="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+        >
+          Keep Shopping
+        </a>
+        <!-- Link back to store, or other parts of site go here -->
+      </div>
+    </div>
+
+    <section class="grid gap-5 lg:grid-cols-12">
+      <!-- Main layout split your cart and checkout summary -->
+
+      <!-- On large displays it becomes 12 column grid -->
+
+      <div class="lg:col-span-8">
+        <!-- Your cart area takes up 8/12 columns which is 66% -->
+
+        <section id="emptyState" class="glass rounded-3xl p-6 hidden">
+          <!-- It becomes a flex container so all child elements have a row layout -->
+
+          <!-- Empty cart message is hidden by default and shows when your cart is empty -->
+
+          <p class="text-xs tracking-widest text-white/60">EMPTY</p>
+          <h2 class="mt-2 text-xl font-semibold tracking-tight">Your cart is empty.</h2>
+          <p class="mt-2 text-sm text-white/70">Add games from Home or Details to see them here.</p>
+
+          <div class="mt-4 flex items-center gap-3">
+            <a
+              href="customer-home.html"
+              class="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+            >
+              Browse
+            </a>
+            <!-- Lets you go browse games to fill your cart -->
+          </div>
+        </section>
+
+        <div id="list" class="grid gap-5"></div>
+        <!-- Where all cart item cards get inserted by JavaScript -->
+      </div>
+
+      <aside class="lg:col-span-4">
+        <!-- Takes up 4/12 which is 33% on large screens -->
+
+        <div class="glass rounded-3xl p-6">
+          <!-- Container for your checkout summary card -->
+
+          <p class="text-xs tracking-widest text-white/60">SUMMARY</p>
+
+          <div class="mt-3 space-y-2 text-sm text-white/75">
+            <!-- Displays your number of items, subtotal, discount, and total fields -->
+
+            <div class="flex items-center justify-between">
+              <span>Items</span>
+              <span id="sumItems">0</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+
+            <div class="flex items-center justify-between">
+              <span>Subtotal</span>
+              <span id="sumSub">$0.00</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+
+            <div id="discountRow" class="hidden flex items-center justify-between">
+               <span>Discount (TEALFIRE)</span>
+              <span id="sumDisc">-$0.00</span>
+            </div>
+            <!-- Hidden unless you apply the TEALFIRE discount code -->
+
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between font-semibold text-white">
+              <span>Total</span>
+              <span id="sumTotal">$0.00</span>
+            </div>
+            <!-- Only displays numbers and they get updated by JavaScript -->
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <!-- Discount code input area inside a grid row layout -->
+
+            <p class="text-xs tracking-widest text-white/60">DISCOUNT CODE</p>
+
+            <div class="mt-3 flex gap-2">
+              <input
+                id="codeInput"
+                class="w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm outline-none placeholder:text-white/40 focus:border-white/20"
+                placeholder="Enter code (ex: TEALFIRE)"
+              />
+              <!-- Input lets you enter a code to get discounts on your purchase -->
+
+              <button
+                id="btnApply"
+                class="shrink-0 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 transition"
+              >
+                Apply
+              </button>
+              <!-- Button applies code and saves it to local storage -->
+            </div>
+
+            <p id="codeMsg" class="mt-2 text-xs text-white/60"></p>
+            <!-- Area where you get discount hints and errors -->
+          </div>
+
+          <button
+            id="btnCheckout"
+            class="mt-5 w-full rounded-2xl bg-accent px-5 py-3 text-sm font-semibold text-white hover:brightness-110 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Checkout
+          </button>
+          <!-- Lets you check out in one swift move. It gets disabled when your cart is empty -->
+
+          <p class="mt-3 text-xs text-white/60">
+            Checkout moves items into your Library instantly (login required).
+          </p>
+          <!-- Small explanation text -->
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    if (window.PCPlusAuth && !window.PCPlusAuth.requireRole("customer", "login.html")) {
+      throw new Error("Customer role required");
+    }
+
+    /* Displays short messages on screen within the toast element.
+       Location of message display reused to prevent multiple elements on screen. */
+    const toast = (t) => {
+      const el = document.getElementById("toast");
+      el.textContent = t;
+      el.classList.remove("hidden");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.add("hidden"), 950);
+    };
+
+    /* Reads in your login session info from local storage */
+    const session = () => (window.PCPlusAuth ? window.PCPlusAuth.getSession() : null);
+    const getAvatarEmoji = (email) => (window.PCPlusAuth ? window.PCPlusAuth.getAvatarEmoji(email) : "🦊");
+
+    /* Local storage only stores string data, JSON parses into an object for JavaScript use */
+    const s = session();
+
+    /* Used to access Login button from navigation bar */
+    const nav = document.getElementById("navLogin");
+    const navRoot = nav ? nav.closest("nav") : null;
+    const navSearchWrap = navRoot ? navRoot.querySelector(".ml-auto") : null;
+    const navHome = document.getElementById("navHome");
+    const navLibrary = document.getElementById("navLibrary");
+    const navCart = document.getElementById("navCart");
+    const navPubDashboard = document.getElementById("navPubDashboard");
+    const navPubManage = document.getElementById("navPubManage");
+    const navPubUpload = document.getElementById("navPubUpload");
+    const navPubProfile = document.getElementById("navPubProfile");
+    const pubLinks = [navPubDashboard, navPubManage, navPubUpload, navPubProfile];
+
+    const orderNav = (items) => {
+      if (!navRoot) return;
+      const frag = document.createDocumentFragment();
+      items.forEach((el) => {
+        if (!el) return;
+        frag.appendChild(el);
+      });
+      if (navSearchWrap) navRoot.insertBefore(frag, navSearchWrap);
+      else navRoot.appendChild(frag);
+    };
+
+    const isPublisher = !!(s && s.role === "publisher");
+    if (navLibrary) navLibrary.classList.toggle("hidden", isPublisher);
+    if (navCart) navCart.classList.toggle("hidden", isPublisher);
+    pubLinks.forEach((el) => {
+      if (el) el.classList.toggle("hidden", !isPublisher);
+    });
+
+    /* Changes label of Login button based on session info */
+    if (nav) {
+      nav.classList.remove("hidden");
+      nav.href = "login.html";
+      nav.textContent = (s && s.email) ? ("Logged in " + getAvatarEmoji(s.email)) : "Login";
+    }
+
+    if (isPublisher) {
+      orderNav([navHome, navPubDashboard, navPubManage, navPubUpload, navPubProfile, nav]);
+    } else {
+      orderNav([navHome, navLibrary, navCart, nav]);
+    }
+    /* Returns true if user logged in false if not */
+    const isLoggedIn = () => {
+      const ss = session();
+      return !!(ss && ss.email && ss.role === "customer");
+    };
+
+    /* Reads in and returns all items added to your cart stored in localStorage */
+    const loadCart = () => {
+      try {
+        return JSON.parse(localStorage.getItem("pcplus_cart") || "[]");
+      } catch {
+        return [];
+      }
+    };
+
+    /* Array stores string values, add items via Get button */
+    const saveCart = (a) => localStorage.setItem("pcplus_cart", JSON.stringify(a || []));
+
+    /* Owns games you purchased */
+    const loadLib = () => {
+      try {
+        return JSON.parse(localStorage.getItem("pcplus_library") || "[]");
+      } catch {
+        return [];
+      }
+    };
+
+    /* Saves purchased games back into local storage */
+    const saveLib = (a) => localStorage.setItem("pcplus_library", JSON.stringify(a || []));
+
+    /* Returns discount code if applied in previous session */
+    const loadDiscount = () => {
+      try {
+        return JSON.parse(localStorage.getItem("pcplus_discount") || "null");
+      } catch {
+        return null;
+      }
+    };
+
+    /* Saves discount code into local storage */
+
+    /* “Database” of games I know about */
+    const STATIC_GAMES = {
+      destiny2: { id: "destiny2", title: "Destiny 2", type: "Shooter • MMO", price: 0.00, priceText: "$0.00", img: "../assets/img/destiny2-1.jpg" },
+      hollowknight: { id: "hollowknight", title: "Hollow Knight", type: "Metroidvania", price: 14.99, priceText: "$14.99", img: "../assets/img/hollowknight-1.jpg" },
+      minecraft: { id: "minecraft", title: "Minecraft", type: "Sandbox", price: 29.99, priceText: "$29.99", img: "../assets/img/minecraft-1.jpg" },
+      "9kings": { id: "9kings", title: "9 Kings", type: "Strategy", price: 11.99, priceText: "$11.99", img: "../assets/img/9kings-1.jpg" },
+      gemcraft: { id: "gemcraft", title: "Gem Craft", type: "Tower Defense", price: 9.99, priceText: "$9.99", img: "../assets/img/gemcraft-1.jpg" },
+      mariokartworlds: { id: "mariokartworlds", title: "Mario Kart World", type: "Racing", price: 59.99, priceText: "$59.99", img: "../assets/img/mariokartworld-1.png" }
+    };
+    /* All prices as string data courtesy of array helper method Math.max() */
+
+    /* Converts array back into string value that can be used as an Id */
+    const normalizeId = (x) => {
+      const t = (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+      /* Matches known values of Ids stored inside an array within my localStorage data. */
+      if (t === "9kings") return "9kings";
+
+      /* Converts special case Ids like “metro” to “Metro Exodus” existing inside localStorage data. */
+      if (t === "mariokartworld" || t === "mariokartworlds" || t === "mariokart") return "mariokartworlds";
+      if (t === "destiny") return "destiny2";
+
+      /* Not explicitly needed but good practice as fallback */
+      return t;
+    };
+
+    const isPlaceholderImagePath = (path) => {
+      const raw = String(path || "").trim().toLowerCase();
+      return !raw || raw.includes("your-image-here") || raw.includes("replace-with-image") || raw.includes("placeholder");
+    };
+    const resolveStoreImage = (path) => (isPlaceholderImagePath(path) ? "../assets/img/sale.png" : String(path).trim());
+
+    const loadPublisherGamesForCart = () => {
+      let records = [];
+      try {
+        records = JSON.parse(localStorage.getItem("games_v1") || "[]");
+      } catch {
+        records = [];
+      }
+      if (!Array.isArray(records)) return {};
+
+      const mapped = {};
+      records.forEach((rec, index) => {
+        const key =
+          normalizeId(rec && rec.storeKey) ||
+          normalizeId(`pub${(rec && rec.title) || "game"}${(rec && rec.id) || index}`) ||
+          `pubgame${index + 1}`;
+        const price = Number(rec && rec.price);
+        const safePrice = Number.isFinite(price) ? price : 0;
+        mapped[key] = {
+          id: key,
+          title: String((rec && rec.title) || `Publisher Game ${index + 1}`),
+          type: String((rec && rec.genre) || "Publisher Game") + " • Publisher",
+          price: safePrice,
+          priceText: `$${safePrice.toFixed(2)}`,
+          img: resolveStoreImage(rec && rec.imagePath)
+        };
+      });
+      return mapped;
+    };
+
+    const getGamesMap = () => ({ ...STATIC_GAMES, ...loadPublisherGamesForCart() });
+
+    /* Creates a sub-element that follows the mouse cursor creating a subtle glow effect */
+    const glow = document.getElementById("cursorGlow");
+
+    /* Move sub-element using MouseEvent object properties: clientX & clientY */
+    addEventListener("mousemove", (e) => {
+      glow.style.left = e.clientX + "px";
+      glow.style.top = e.clientY + "px";
+    }, { passive: true });
+    /* mousemove event listener increases scroll performance with passive property */
+
+    /* Update CSS variables showing mouse position relative to hovered card within an element */
+    const setVars = (el, e) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      el.style.setProperty("--my", (e.clientY - r.top) + "px");
+    };
+
+    /* Single template string used to store HTML structure for each item added to cart */
+    const itemRow = (g, storedIndex) => `
+      <article class="shine glass rounded-3xl p-5" data-tilt>
+        <div class="flex gap-4">
+          <div class="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/30">
+            <img class="h-full w-full object-cover" src="${g.img}" alt="${g.title}">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="truncate text-lg font-semibold tracking-tight">${g.title}</h3>
+                <p class="mt-1 text-sm text-white/70">${g.type}</p>
+              </div>
+              <span class="shrink-0 rounded-xl bg-accent px-3 py-1 text-xs font-semibold text-white">${g.priceText}</span>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <a href="details.html?id=${g.id}" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition">Details</a>
+              <button data-remove="${storedIndex}" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition">Remove</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    `;
+
+    /* Calculates Subtotal, Discount, & Total fields on the site’s UI after Get button click */
+    const calcTotals = (validIds, gamesMap) => {
+      /* Accepts array of valid Ids in user’s cart */
+      const subtotal = validIds.reduce((sum, id) => sum + (gamesMap[id]?.price || 0), 0);
+      /* Adds all prices up */
+
+      const disc = (loadDiscount() === "TEALFIRE") ? subtotal * 0.15 : 0;
+      /* 15% off for discount only available if user inputs TEALFIRE */
+
+      const total = Math.max(0, (subtotal - disc));
+      /* Cannot go below $0 */
+
+      return { subtotal, disc, total };
+    };
+
+    /* Main function that renders and re-renders UI dynamically */
+    const render = () => {
+      /* Reads localStorage database */
+      const cartStored = loadCart();
+      const gamesMap = getGamesMap();
+
+      /* Accepts search query string */
+      const q = (document.getElementById("searchBox")?.value || "").trim().toLowerCase();
+
+      /* Returns array of valid item Ids */
+      const validIds = cartStored.map(normalizeId).filter(id => gamesMap[id]);
+
+      /* Holds number of valid items stored in localStorage */
+      const validCount = validIds.length;
+
+      /* Keeps index value for removing elements from localStorage */
+      const renderItems = cartStored
+        .map((rawId, storedIndex) => ({ id: normalizeId(rawId), storedIndex }))
+        /* Ensures only valid elements get returned into an array */
+        .filter(x => gamesMap[x.id])
+        .filter(x => {
+          /* Filtering out everything */
+          if (!q) return true;
+
+          /* Search feature filters through all valid stored element properties */
+          const g = gamesMap[x.id];
+          return (g.title.toLowerCase().includes(q) || g.type.toLowerCase().includes(q) || g.id.toLowerCase().includes(q));
+        });
+
+      /* Grabs all DOM nodes you want to control that are outside of stored nodes */
+      const list = document.getElementById("list");
+      const empty = document.getElementById("emptyState");
+      const sub = document.getElementById("subLine");
+      const btnClear = document.getElementById("btnClear");
+      const btnCheckout = document.getElementById("btnCheckout");
+
+      /* Empty element hidden when no matches with Get button returned */
+      empty.classList.toggle("hidden", validCount > 0);
+
+      /* List container only shows if there are elements present */
+      list.classList.toggle("hidden", validCount === 0);
+
+      /* “Clear” button only shows if there are elements present */
+      btnClear.classList.toggle("hidden", validCount === 0);
+
+      /* Disables checkout button if there are no items in cart */
+      btnCheckout.disabled = validCount === 0;
+
+      /* Updates subtext according to number of valid items stored */
+      sub.textContent = validCount ? `Items in cart: ${validCount}` : "No items yet.";
+
+      /* Inserts multiple instances of item card through array reduction method */
+      list.innerHTML = renderItems.map(x => itemRow(gamesMap[x.id], x.storedIndex)).join("");
+
+      /* Allows item cards do have a mouseover “shine” effect following your cursor */
+      document.querySelectorAll("[data-tilt]").forEach(el => {
+        el.onmousemove = (e) => setVars(el, e);
+        el.onmouseleave = () => {
+          el.style.setProperty("--mx", "0px");
+          el.style.setProperty("--my", "0px");
+        };
+      });
+
+      /* Installs event listeners onto dynamically created Remove buttons */
+      document.querySelectorAll("[data-remove]").forEach(btn => {
+        btn.onclick = () => {
+          /* Converts string data back into number data for mathematical operations */
+          const storedIndex = +btn.dataset.remove;
+
+          /* Reads in all data stored in localStorage */
+          const cur = loadCart();
+
+          /* Checks if array of stored data contains valid element(s) */
+          if (storedIndex >= 0 && storedIndex < cur.length) {
+            /* Indexes location of element */
+            cur.splice(storedIndex, 1);
+            /* Deletes 1 instance of an element within array at index value */
+
+            saveCart(cur);
+            /* Installs updated data back into localStorage */
+
+            toast("Removed");
+            /* Outputs data from JavaScript functions to console */
+
+            render();
+            /* Checks id value against valid Id list */
+          }
+        };
+      });
+
+      /* Calculates the total price of all items within cart stored in localStorage */
+      const { subtotal, disc, total } = calcTotals(validIds, gamesMap);
+
+      /* Checks if user has stored discount code */
+      document.getElementById("sumItems").textContent = String(validCount);
+      document.getElementById("sumSub").textContent = "$" + subtotal.toFixed(2);
+
+      /* Ensures minimum total price is 0 */
+      document.getElementById("sumTotal").textContent = "$" + total.toFixed(2);
+
+      /* Updates all numerical values throughout UI */
+      const discRow = document.getElementById("discountRow");
+
+      /* Toggles display state of discount row */
+      discRow.classList.toggle("hidden", !(loadDiscount() === "TEALFIRE" && disc > 0));
+
+      /* Updates value stored inside discount number field */
+      document.getElementById("sumDisc").textContent = "-$" + disc.toFixed(2);
+
+      /* Updates discount message output field */
+      const msg = document.getElementById("codeMsg");
+      msg.textContent = (loadDiscount() === "TEALFIRE") ? "Applied: TEALFIRE (15% off)" : "Try: TEALFIRE";
+    };
+
+    /* Deletes all your stored items inside your cart and updates UI */
+    document.getElementById("btnClear").onclick = () => {
+      saveCart([]);
+      toast("Cart cleared");
+      render();
+    };
+
+    /* Stores discount code entered by user inside Local Storage */
+    document.getElementById("btnApply").onclick = () => {
+      /* Converts all values to uppercase */
+      const input = (document.getElementById("codeInput").value || "").trim().toUpperCase();
+      const msg = document.getElementById("codeMsg");
+
+      /* Outputs message if input field is empty */
+      if (!input) {
+        saveDiscount(null);
+        msg.textContent = "Enter a code to apply.";
+        toast("No code entered");
+        render();
+        return;
+      }
+
+      /* Ensures that only TEALFIRE is accepted as valid discount code */
+      if (input === "TEALFIRE") {
+        saveDiscount("TEALFIRE");
+        msg.textContent = "Applied: TEALFIRE (15% off)";
+        toast("Discount applied");
+      } else {
+        saveDiscount(null);
+        msg.textContent = "Invalid code. Only TEALFIRE works.";
+        toast("Invalid code");
+      }
+
+      render();
+      /* Stores current session variables into localStorage database */
+    };
+
+    /* Javascipt prevents check out if you’re not logged in which is handled via session store */
+    document.getElementById("btnCheckout").onclick = () => {
+      /* Prevents users that are not logged in from checking out their carts */
+      if (!isLoggedIn()) {
+        toast("Please log in to checkout.");
+        setTimeout(() => location.href = "login.html", 650);
+        /* Redirects logged in users to checkout URL after 0.5 second delay */
+        return;
+      }
+
+      const gamesMap = getGamesMap();
+      const cart = loadCart().map(normalizeId).filter(id => gamesMap[id]);
+      /* Confirms all values stored inside returned array exist within database keys */
+
+      /* Validates that cart is not empty before proceeding with checkout process */
+      if (!cart.length) return;
+
+      const lib = loadLib();
+
+      /* Adds all validated items into Library array stored in localStorage */
+      saveLib(lib.concat(cart));
+
+      saveCart([]);
+      saveDiscount(null);
+      location.href = "library.html";
+    };
+    /* Small explanation text */
+
+    const searchBox = document.getElementById("searchBox");
+    if (searchBox) searchBox.addEventListener("input", render);
+
+    render();
+  </script>
+</body>
+</html>
