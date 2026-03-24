@@ -25,3 +25,6 @@ replay_pid*
 
 # Project artifacts kept local-only
 high-fidelity-prototype/
+.DS_Store
+.playwright-cli/
+test-results/
