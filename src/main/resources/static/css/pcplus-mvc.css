@@ -1,0 +1,491 @@
+/* this file gives the mvc pages the same overall feel as the original pc plus prototype */
+
+/* root section stores css variables that are used throughout the file */
+:root {
+    /* stores the current x position of the mouse */
+    --mx: 0;
+
+    /* stores the current y position of the mouse */
+    --my: 0;
+
+    /* the dark teal color used for the background of the site */
+    --steam-bg: #041a1a;
+
+    /* the color of panels with glass appearance */
+    --steam-panel: rgba(255, 255, 255, 0.06);
+
+    /* the border color of glass elements */
+    --steam-border: rgba(255, 255, 255, 0.10);
+
+    /* the color used for the text on the site */
+    --steam-text: #e5edf7;
+
+    /* a muted color used for text that is not the main text */
+    --steam-muted: rgba(229, 237, 247, 0.72);
+
+    /* the color of all orange elements on the site */
+    --steam-accent: #ff7a18;
+}
+
+/* Applies the background of the page to the <html> tag */
+html {
+    /* uses the dark background variable */
+    background: var(--steam-bg);
+
+    /* keeps the page from bouncing past the top and bottom of the screen */
+    overscroll-behavior: none;
+}
+
+/* Main styling for the pages of the PC Plus site */
+body.pcplus-body {
+    /* applies the Yuji Mai font to the site (with a fallback to the system fonts) */
+    font-family: "Yuji Mai", system-ui, sans-serif;
+
+    /* spaces out the text so that it appears as if it’s styled to match the PC Plus pages */
+    letter-spacing: 0.35px;
+
+    /* sets the color of the text on the site */
+    color: var(--steam-text);
+
+    /* creates an animated background that fills the screen with glowing color layers */
+    background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(255, 122, 24, 0.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 35%, rgba(0, 255, 200, 0.10), transparent 60%),
+        linear-gradient(120deg, #041a1a, #083535, #062626, #0b4747);
+
+    /* keeps any radial gradients static while allowing linear gradients to slowly pan across the screen */
+    background-size: 100% 100%, 100% 100%, 300% 300%;
+
+    /* makes the background animation pan slowly across the screen */
+    animation: bg-pan 14s ease-in-out infinite alternate;
+
+    /* ensures that the body element fills the screen at least to the height of the screen */
+    min-height: 100vh;
+}
+
+/* Animation that provides for the background of the PC Plus site */
+@keyframes bg-pan {
+    /* starting position of the background gradient */
+    0% {
+        background-position: 0 0, 0 0, 0% 50%;
+    }
+
+    /* ending position of the background gradient */
+    100% {
+        background-position: 0 0, 0 0, 100% 50%;
+    }
+}
+
+/* The glass panel style for elements on the site */
+.pcplus-glass {
+    /* applies a gradient to the panel that creates the illusion of frosted glass */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.05));
+
+    /* blurs the areas behind the panel */
+    backdrop-filter: blur(16px);
+
+    /* adds support for the blur effect in Safari */
+    -webkit-backdrop-filter: blur(16px);
+
+    /* adds a border to the glass element */
+    border: 1px solid var(--steam-border);
+}
+
+/* base class for elements that should have a shine effect when the mouse hovers over them */
+.pcplus-shine {
+    /* allows the shine effect to be placed within the element */
+    position: relative;
+
+    /* hides the shine effect when it would extend beyond the element */
+    overflow: hidden;
+}
+
+/* Creates the shine effect for the element */
+.pcplus-shine::before {
+    /* required for shine effect to appear */
+    content: "";
+
+    /* positions the shine to cover the element */
+    position: absolute;
+
+    /* slightly expands the shine effect beyond the element */
+    inset: -2px;
+
+    /* hidden by default */
+    opacity: 0;
+
+    /* animates the shine effect to fade in when the mouse hovers over the element */
+    transition: opacity 0.18s;
+
+    /* ensures the shine effect does not block any clicks */
+    pointer-events: none;
+
+    /* creates a small light spot that appears next to the mouse */
+    background: radial-gradient(
+        120px 120px at var(--mx) var(--my),
+        rgba(255, 255, 255, 0.12),
+        transparent 70%
+    );
+}
+
+/* Makes the shine effect visible when the mouse hovers over the element */
+.pcplus-shine:hover::before {
+    /* sets the shine to be visible but subtle */
+    opacity: 0.25;
+}
+
+/* this keeps the sections that should be revealed visible even when javascript fails to load */
+.pcplus-reveal {
+    /* keeps the section visible even prior to the animation running */
+    opacity: 1;
+
+    /* keeps the section visible in its normal position */
+    transform: translateY(0) scale(1);
+
+    /* removes blur from the section */
+    filter: blur(0);
+}
+
+/* this still allows the transition when the in class is added */
+.pcplus-reveal.in {
+    /* keeps the revealed section visible */
+    opacity: 1;
+
+    /* keeps the revealed section in its final position */
+    transform: translateY(0) scale(1);
+
+    /* keeps the revealed section sharp */
+    filter: blur(0);
+
+    /* controls how smooth the changes in position of the section appear */
+    transition: opacity 0.7s, transform 0.7s, filter 0.7s;
+}
+
+/* adds a lift effect to the cards on the site when the mouse hovers over them */
+.pcplus-card:hover {
+    /* moves the card up a small distance */
+    transform: translateY(-4px);
+
+    /* makes the movement of the card smooth */
+    transition: transform 0.2s ease;
+}
+
+/* Limits the length of the game titles to two lines */
+.pcplus-title-clamp {
+    /* enables line-clamping for text elements */
+    display: -webkit-box;
+
+    /* limits the line-clamp to two lines */
+    -webkit-line-clamp: 2;
+
+    /* sets the text within lines to stack vertically */
+    -webkit-box-orient: vertical;
+
+    /* hides any text past the number of lines set */
+    overflow: hidden;
+}
+
+/* limits longer text to three lines */
+.pcplus-text-clamp {
+    /* enables line-clamping for text elements */
+    display: -webkit-box;
+
+    /* limits the line-clamp to three lines */
+    -webkit-line-clamp: 3;
+
+    /* sets the text within lines to stack vertically */
+    -webkit-box-orient: vertical;
+
+    /* hides any text past the number of lines set */
+    overflow: hidden;
+}
+
+/* adds scrollbar styling for webkit browsers */
+.pcplus-scrollbar::-webkit-scrollbar {
+    /* sets the width of scroll bars */
+    width: 10px;
+
+    /* sets the height of horizontal scroll bars */
+    height: 10px;
+}
+
+/* adds styling to the draggable part of the scrollbar */
+.pcplus-scrollbar::-webkit-scrollbar-thumb {
+    /* changes scrollbar color to a light transparent color */
+    background: rgba(255, 255, 255, 0.15);
+
+    /* makes scrollbar rounded */
+    border-radius: 999px;
+}
+
+/* adds styling to the background behind the scrollable thumb */
+.pcplus-scrollbar::-webkit-scrollbar-track {
+    /* changes background color to a very subtle color */
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Small dot used for indicators (such as carousels) */
+.pcplus-dot {
+    /* sets the width of the dot */
+    width: 10px;
+
+    /* sets the height of the dot */
+    height: 10px;
+
+    /* makes the dot filled with a rounded color */
+    border-radius: 999px;
+
+    /* adds a border around the dot */
+    border: 1px solid rgba(255, 255, 255, 0.22);
+
+    /* changes background color of inactive dots to a soft transparent color */
+    background: rgba(255, 255, 255, 0.10);
+}
+
+/* State for the active dot */
+.pcplus-dot.active {
+    /* fills the active dot with the accent color for the site */
+    background: var(--steam-accent);
+
+    /* makes the border of the active dot match the accent color for the site */
+    border-color: var(--steam-accent);
+}
+
+/* Style for toast notifications on the screen */
+.pcplus-toast {
+    /* keeps toast element fixed on screen when the user scrolls */
+    position: fixed;
+
+    /* positions toast element to start at the center of the screen */
+    left: 50%;
+
+    /* positions toast element near the bottom of the screen */
+    bottom: 24px;
+
+    /* shifts toast element back by half of its own width */
+    transform: translateX(-50%);
+
+    /* keeps toast above other elements on the page */
+    z-index: 60;
+
+    /* rounds the corners of the toast notification */
+    border-radius: 20px;
+
+    /* adds border around toast notification */
+    border: 1px solid var(--steam-border);
+
+    /* background color of toast notification is a dark transparent color */
+    background: rgba(0, 0, 0, 0.40);
+
+    /* adds spacing within the toast notification */
+    padding: 10px 16px;
+
+    /* changes color of text inside of toast notification to a bright white */
+    color: rgba(255, 255, 255, 0.9);
+
+    /* blurs the background behind the toast notification */
+    backdrop-filter: blur(14px);
+
+    /* hides toast notifications by default */
+    display: none;
+}
+
+/* small glow effect for the mouse cursor */
+.pcplus-cursor-glow {
+    /* prevents glow effect from blocking page interactions */
+    pointer-events: none;
+
+    /* keeps glow effect fixed in place relative to the screen */
+    position: fixed;
+
+    /* starting x position of glow effect */
+    left: 0;
+
+    /* starting y position of glow effect */
+    top: 0;
+
+    /* makes glow effect circular in shape */
+    border-radius: 999px;
+
+    /* small width of glow effect */
+    width: 0.12rem;
+
+    /* small height of glow effect */
+    height: 0.12rem;
+
+    /* keeps glow effect subtle */
+    opacity: 0.035;
+
+    /* softens glow effect */
+    filter: blur(2px);
+
+    /* centers glow effect over the mouse cursor */
+    transform: translate(-50%, -50%);
+
+    /* creates glowing orange and teal effect */
+    background: radial-gradient(circle, rgba(255, 122, 24, 0.55), rgba(0, 255, 200, 0.25), transparent 72%);
+
+    /* keeps glow effect above the content of the page */
+    z-index: 70;
+}
+
+/* Avatar image within the navigation bar */
+.pcplus-nav-avatar {
+    /* changes the width of the avatar image */
+    width: 2.25rem;
+
+    /* changes the height of the avatar image */
+    height: 2.25rem;
+
+    /* makes the avatar image circular in shape */
+    border-radius: 999px;
+
+    /* adds a border around the avatar image */
+    border: 1px solid rgba(255, 255, 255, 0.16);
+
+    /* background color of avatar image with fallback to transparent */
+    background: rgba(255, 255, 255, 0.06);
+
+    /* cropped avatar image */
+    object-fit: cover;
+
+    /* adds an orange glow around the avatar */
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.08);
+}
+
+/* Container for the avatar and the user’s display name */
+.pcplus-nav-user {
+    /* places the avatar and text within the container next to each other */
+    display: inline-flex;
+
+    /* centers the avatar and text within the container */
+    align-items: center;
+
+    /* adds space between the avatar and the text within the container */
+    gap: 0.65rem;
+
+    /* adds spacing within the container */
+    padding: 0.35rem 0.65rem;
+
+    /* makes container to appear as pill shaped */
+    border-radius: 999px;
+
+    /* adds border around the container */
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    /* adds background color to the container */
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Grid that displays the available avatars for users to select */
+.pcplus-avatar-grid {
+    /* creates a list of avatars that appears in a grid */
+    display: grid;
+
+    /* creates two columns within the grid */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    /* adds space between avatars in the avatar list */
+    gap: 0.9rem;
+}
+
+/* rule for screens that are at least 640px in size */
+@media (min-width: 640px) {
+    .pcplus-avatar-grid {
+        /* changes the avatars from a two column list to three columns in size */
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Hidden radio input for avatars */
+.pcplus-avatar-input {
+    /* removes the avatar input from the visible layout */
+    position: absolute;
+
+    /* makes the avatar input invisible */
+    opacity: 0;
+
+    /* prevents the click of the mouse from being registered for the hidden input */
+    pointer-events: none;
+}
+
+/* visual avatar that lists each available avatar option */
+.pcplus-avatar-card {
+    /* makes the avatar a block element */
+    display: block;
+
+    /* changes the cursor within the screen to a pointer over the avatar */
+    cursor: pointer;
+
+    /* makes the avatar rounded */
+    border-radius: 1.25rem;
+
+    /* adds a border around the avatars */
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    /* background color of avatars is a glass color */
+    background: rgba(255, 255, 255, 0.05);
+
+    /* adds spacing within the avatars */
+    padding: 0.9rem;
+
+    /* ensures avatars smoothly change their visual appearance when hovered over or selected */
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Hover effect for the avatars */
+.pcplus-avatar-card:hover {
+    /* lifts the avatars when hovered over */
+    transform: translateY(-2px);
+
+    /* changes the border color of avatars when hovered over to the accent color */
+    border-color: rgba(255, 122, 24, 0.35);
+
+    /* makes the background color of avatars brighter when hovered over */
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Selected avatar when selected */
+.pcplus-avatar-input:checked + .pcplus-avatar-card {
+    /* changes to selected avatar border color to orange */
+    border-color: rgba(255, 122, 24, 0.75);
+
+    /* changes background color of the selected avatar with an orange tint */
+    background: rgba(255, 122, 24, 0.12);
+
+    /* adds an outline to the selected avatar */
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.20);
+}
+
+/* image within the avatars */
+.pcplus-avatar-image {
+    /* ensures the avatar images are filled to the width of the avatars */
+    width: 100%;
+
+    /* ensures images within avatars are square in shape */
+    aspect-ratio: 1 / 1;
+
+    /* makes avatars images rounded in corners */
+    border-radius: 1rem;
+
+    /* cropped images within avatars */
+    object-fit: cover;
+
+    /* adds a background color behind the avatars images */
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* text that appears under each avatar image */
+.pcplus-avatar-label {
+    /* adds spacing between the text and the avatar image */
+    margin-top: 0.65rem;
+
+    /* centers text under the avatars */
+    text-align: center;
+
+    /* makes the text small in size */
+    font-size: 0.85rem;
+
+    /* changes color of text to a softer shade of the main text color of the site */
+    color: rgba(229, 237, 247, 0.82);
+}

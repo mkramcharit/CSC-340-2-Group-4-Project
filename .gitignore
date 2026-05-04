@@ -29,3 +29,14 @@ replay_pid*
 test-results/
 pc-plus/
 __MACOSX/
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Environment files
+.env
+
+# IDE files
+.idea/
+.vscode/
