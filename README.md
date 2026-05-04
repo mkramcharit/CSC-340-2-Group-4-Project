@@ -1,5 +1,10 @@
 # PC+ Spring Boot MVC Application
 
+## Team Members
+
+Michael Ramcharitar  
+Eddy Arriaga-Barrientos
+
 ## Version
 
 1.1
