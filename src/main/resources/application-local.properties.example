@@ -1,0 +1,7 @@
+# Copy this file to application-local.properties and fill with your Neon values.
+# Keep application-local.properties untracked.
+
+$env:NEON_DB_URL="jdbc:postgresql://ep-raspy-fog-anhd61ex-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+$env:NEON_DB_USERNAME="neondb_owner"
+$env:NEON_DB_PASSWORD="YOUR_NEON_PASSWORD"
+mvn spring-boot:run
