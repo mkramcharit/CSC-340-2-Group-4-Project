@@ -7,7 +7,7 @@ Eddy Arriaga-Barrientos
 
 ## Version
 
-1.1
+Final CSC 340 submission
 
 ## Course
 
@@ -15,9 +15,61 @@ CSC 340
 
 ## Project Scope
 
-Customer and Provider (Publisher) use cases
+PC+ implements two main actors:
+
+- Customer
+- Publisher, also referred to as Provider in earlier course documents
+
+SysAdmin functionality is not part of the final implemented scope.
+
+## Project Summary
+
+PC+ is a Spring Boot MVC web application for a digital game storefront. Customers can create an account, log in, browse the game catalog, view game details, add games to a cart, check out, view purchased games in their library, update their profile/avatar, reset their password with a PIN, and leave reviews for games they own.
+
+Publishers can create a publisher account, log in, access a publisher dashboard, add new game listings, edit existing games they own, remove their own games, view sales and review information for their games, reply to reviews, and delete reviews on games they published.
+
+The application uses Spring Boot, Spring MVC controllers, service classes, Spring Data JPA repositories, FreeMarker templates, Tailwind CSS styling, and a PostgreSQL database hosted through Neon.
+
+## How the Project Is Compartmentalized
+
+The project is organized by application responsibility so each layer has a clear job.
+
+| Area | Folder or File | Purpose |
+|---|---|---|
+| Application entry point | `src/main/java/com/pcplus/PcPlusApplication.java` | Starts the Spring Boot application |
+| Configuration | `src/main/java/com/pcplus/config` | Holds application configuration, security setup, and database seed data |
+| Controllers | `src/main/java/com/pcplus/controller` | Receives browser or API requests and sends work to the correct service |
+| Services | `src/main/java/com/pcplus/service` | Holds the business logic and rules for login, catalog, cart, checkout, reviews, and publisher management |
+| Repositories | `src/main/java/com/pcplus/repository` | Communicates with the Neon PostgreSQL database through Spring Data JPA |
+| Models | `src/main/java/com/pcplus/model` | Defines the database-backed objects such as User, Game, CartItem, Purchase, and Review |
+| DTOs | `src/main/java/com/pcplus/dto/Dtos.java` | Defines request and response objects used by the API |
+| Security | `src/main/java/com/pcplus/security` | Handles JWT creation, validation, and request authentication |
+| Exceptions | `src/main/java/com/pcplus/exception` | Handles API errors in a consistent format |
+| MVC views | `src/main/resources/templates` | FreeMarker pages shown to customers and publishers |
+| App settings | `src/main/resources/application.properties` | Contains Spring Boot, database, server port, and JWT settings |
+| Database schema | `schema.sql` | Defines database table structure for the app |
+| SRS document | `PC+SRS.md` | Lists the final use cases and requirements |
+| UML diagram | `docs/uml-class-diagram.png` | Shows the final main class/object relationships |
+
+## Tech Stack
+
+- Java
+- Spring Boot
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- FreeMarker
+- PostgreSQL hosted on Neon
+- Tailwind CSS
+- Maven
 
 ## Local Site URL
+
+```text
+http://localhost:8081/pcplus
+```
+
+Main catalog page:
 
 ```text
 http://localhost:8081/pcplus/catalog
@@ -29,255 +81,207 @@ http://localhost:8081/pcplus/catalog
 http://localhost:8081/api
 ```
 
-## Overview
-
-The PC+ application allows customers and publishers to interact with a digital game catalog. Customers can browse the catalog, view individual game details, create an account, log in, add games to a cart for purchase, checkout, view their library of purchased games, and write reviews for the games they have purchased. Publishers can create an account, log in, access a publisher dashboard, add new games, edit existing games, remove games from the catalog, view sales statistics for their games, delete reviews for their games, and reply to comments on those reviews.
-
-The backend utilizes Spring Boot, Spring MVC, Spring Data JPA, Spring Security, FreeMarker templates, Tailwind CSS for styling, and a PostgreSQL database hosted on Neon.
-
-The SysAdmin endpoints for the application are outside of the scope of this project.
-
-## Tech Stack
-
-- Java
-- Spring Boot
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- FreeMarker
-- PostgreSQL (hosted on Neon)
-- Tailwind CSS
-- Maven
-
 ## UML Class Diagram
 
-The class diagram for the PC+ application is included with the project. The file location is:
+The final UML class diagram is located at:
+
+```text
+docs/uml-class-diagram.png
+```
+
+A copy may also be kept at:
 
 ```text
 backend-api/docs/uml-class-diagram.png
 ```
 
-## Neon Configuration
+## Important Security Note
 
-The database configuration for the application (application.properties) is located at the following address within the repository:
+The submitted repository should not contain a real Neon database password or secret. The `src/main/resources/application.properties` file should use environment variables or safe placeholders before pushing to GitHub.
 
-```text
-src/main/resources/application.properties
+Recommended format:
+
+```properties
+spring.datasource.url=${NEON_DB_URL}
+spring.datasource.username=${NEON_DB_USERNAME}
+spring.datasource.password=${NEON_DB_PASSWORD}
+pcplus.jwt.secret=${PCPLUS_JWT_SECRET:PCPlusSecretKey_ChangeThisInProduction_CSC340_Group4_2026}
 ```
 
-The file contains database passwords replaced with environment variables. The following environment variables must be configured on the local machine to connect to the Neon database.
+## Environment Variables
 
 ### PowerShell
 
 ```powershell
 $env:NEON_DB_URL="jdbc:postgresql://YOUR_NEON_HOST/neondb?sslmode=require"
-
 $env:NEON_DB_USERNAME="neondb_owner"
-
 $env:NEON_DB_PASSWORD="YOUR_NEON_PASSWORD"
+$env:PCPLUS_JWT_SECRET="YOUR_LONG_SECRET_VALUE"
 ```
 
 ### macOS or Linux Terminal
 
 ```bash
 export NEON_DB_URL="jdbc:postgresql://YOUR_NEON_HOST/neondb?sslmode=require"
-
 export NEON_DB_USERNAME="neondb_owner"
-
 export NEON_DB_PASSWORD="YOUR_NEON_PASSWORD"
+export PCPLUS_JWT_SECRET="YOUR_LONG_SECRET_VALUE"
 ```
 
 ## How to Run the Project
 
-Once the environment variables are configured, the project can be compiled and run using the following command:
-
-```bash
-mvn spring-boot:run
-```
-
-Alternatively, the following command can be used to invoke the Maven wrapper:
+From the root project folder, run:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-On Windows PowerShell using the Maven wrapper:
+On Windows PowerShell, run:
 
 ```powershell
 .\mvnw spring-boot:run
 ```
 
-Once the application is running, navigate to the following URL:
+If Maven is installed globally, this also works:
+
+```bash
+mvn spring-boot:run
+```
+
+Then open:
 
 ```text
-http://localhost:8080/pcplus/catalog
+http://localhost:8081/pcplus
 ```
+
+To stop the server, press `Ctrl + C` in the terminal.
 
 ## Main MVC Pages
 
 | Page | URL | Description |
 |---|---|---|
-| Catalog | `/pcplus/catalog` | List of all available games |
-| Game Details | `/pcplus/games/{gameId}` | Page with details about a specific game |
-| Login | `/pcplus/login` | Page to login to the application |
-| Signup | `/pcplus/signup` | Page to create an account |
-| Forgot Password | `/pcplus/forgot-password` | Page to reset the password by entering the email and 4-digit PIN associated to the account |
-| Cart | `/pcplus/cart` | Page that shows the items added to the cart |
-| Library | `/pcplus/library` | Page that lists all of the games purchased by the customer |
-| Profile | `/pcplus/profile` | Page that displays information about the user |
-| Publisher Dashboard | `/pcplus/publisher/dashboard` | Publisher page that displays sales and review statistics |
-| New Publisher Game | `/pcplus/publisher/games/new` | Form page to create a new game by the publisher |
-| Edit Publisher Game | `/pcplus/publisher/games/{gameId}/edit` | Form page to edit the information of a game published by the publisher |
+| Catalog | `/pcplus/catalog` | Lists the available live games |
+| Game Details | `/pcplus/games/{id}` | Shows details, price, images, ownership state, and reviews for one game |
+| Customer Signup | `/pcplus/signup` | Creates a customer account |
+| Publisher Signup | `/pcplus/publisher/signup` | Creates a publisher account |
+| Login | `/pcplus/login` | Logs in either a customer or publisher |
+| Forgot Password | `/pcplus/forgot-password` | Resets a password using email and 4-digit PIN |
+| Cart | `/pcplus/cart` | Shows games added to the cart |
+| Library | `/pcplus/library` | Shows games purchased by the logged-in customer |
+| Profile | `/pcplus/profile` | Shows and updates customer profile information |
+| Publisher Dashboard | `/pcplus/publisher/dashboard` | Shows publisher games, sales data, and reviews |
+| New Publisher Game | `/pcplus/publisher/games/new` | Form for a publisher to add a new game |
+| Edit Publisher Game | `/pcplus/publisher/games/{id}/edit` | Form for a publisher to edit one of their games |
 
-## API Endpoints
-
-The following endpoints are available for the customers and publishers actors as well as the MVC frontend.
-
-### Auth Endpoints
+## Customer API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/auth/signup` | End point to create a new customer or publisher |
-| POST | `/api/auth/login` | Endpoint to login to the application |
-| POST | `/api/auth/reset-password` | Endpoint to reset the password for the user |
-| GET | `/api/auth/me` | Returns information about the user that is currently logged in |
-| PATCH | `/api/auth/avatar` | Endpoint to change the avatar for the user that is currently logged in |
+| POST | `/api/auth/signup` | Creates a customer or publisher account |
+| POST | `/api/auth/login` | Logs in and returns authentication data |
+| POST | `/api/auth/reset-password` | Resets a password using email and PIN |
+| GET | `/api/auth/me` | Returns the currently authenticated user |
+| PATCH | `/api/auth/avatar` | Updates the current user's avatar |
+| GET | `/api/games` | Lists all live games |
+| GET | `/api/games/{id}` | Shows one game by id |
+| GET | `/api/games/top-sellers` | Lists top selling games |
+| GET | `/api/games/newest` | Lists newest games |
+| GET | `/api/games/on-sale` | Lists games with sale prices |
+| GET | `/api/games/search?q=` | Searches games by keyword |
+| GET | `/api/games/{gameId}/reviews` | Lists reviews for one game |
+| POST | `/api/games/{gameId}/reviews` | Creates a review for an owned game |
+| GET | `/api/cart` | Lists the current user's cart |
+| POST | `/api/cart` | Adds a game to the cart |
+| DELETE | `/api/cart/{gameId}` | Removes one game from the cart |
+| DELETE | `/api/cart` | Clears the cart |
+| GET | `/api/library` | Lists purchased games |
+| GET | `/api/library/owns/{gameId}` | Checks whether the current customer owns a game |
+| POST | `/api/library/checkout` | Checks out every item in the cart |
+| POST | `/api/library/buy/{gameId}` | Immediately buys one game |
 
-### Game Catalog Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/games` | Returns a list of all of the games in the catalog |
-| GET | `/api/games/{id}` | Returns the details for a specific game |
-| GET | `/api/games/top-sellers` | Returns a list of the best selling games |
-| GET | `/api/games/newest` | Returns a list of the newest games added to the catalog |
-| GET | `/api/games/on-sale` | Returns a list of all of the games on sale |
-| GET | `/api/games/search?q=` | Searches for games in the catalog by the title and related text of the game |
-| GET | `/api/games/{gameId}/reviews` | Returns a list of all of the reviews for a specific game |
-| POST | `/api/games/{gameId}/reviews` | Endpoint for customers to leave a review for a specific game |
-
-### Cart Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/cart` | Returns the list of all of the items in the cart |
-| POST | `/api/cart/{gameId}` | Endpoint for adding a specific game to the cart |
-| DELETE | `/api/cart/{gameId}` | Endpoint for removing a specific game from the cart |
-| DELETE | `/api/cart` | Endpoint for emptying the cart of all items |
-
-## Library and Checkout Endpoints
+## Publisher API and MVC Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/library` | Returns the list of games that have been purchased by the customer |
-| GET | `/api/library/owns/{gameId}` | Endpoint for determining if a customer owns a specific game |
-| POST | `/api/library/checkout` | Endpoint to checkout for all of the items in the cart |
-| POST | `/api/library/buy/{gameId}` | Endpoint to purchase a specific game |
-
-## Publisher Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/pcplus/publisher/dashboard` | Shows the publisher dashboard containing sales and review statistics |
-| GET | `/pcplus/publisher/games/new` | Shows the game creation form |
-| POST | `/pcplus/publisher/games` | Creates a new game published by the logged in publisher |
-| GET | `/pcplus/publisher/games/{gameId}/edit` | Shows the edit form for the game published by the publisher |
-| POST | `/pcplus/publisher/games/{gameId}/edit` | Updates the information for a game published by the publisher |
-| POST | `/pcplus/publisher/games/{gameId}/delete` | Deletes a game published by the publisher |
-| POST | `/pcplus/publisher/reviews/{reviewId}/delete` | Deletes the review from one of the publisher's games |
-| POST | `/pcplus/publisher/reviews/{reviewId}/reply` | Allows the publisher to add a reply to one of the reviews of one of their games |
-| GET | `/pcplus/publisher/logout` | Logs out the currently logged in publisher |
+| GET | `/api/publisher/games` | Lists games owned by the publisher |
+| GET | `/api/publisher/profile` | Returns publisher profile information |
+| PATCH | `/api/publisher/profile` | Updates publisher profile information |
+| POST | `/api/publisher/games` | Creates a new game owned by the publisher |
+| PUT | `/api/publisher/games/{id}` | Updates a publisher-owned game |
+| DELETE | `/api/publisher/games/{id}` | Removes a publisher-owned game |
+| GET | `/api/publisher/dashboard` | Returns dashboard summary data |
+| GET | `/api/publisher/reviews` | Returns reviews for publisher-owned games |
+| GET | `/pcplus/publisher/dashboard` | Shows the publisher dashboard page |
+| POST | `/pcplus/publisher/games` | Creates a game through the MVC form |
+| POST | `/pcplus/publisher/games/{id}` | Updates a game through the MVC form |
+| POST | `/pcplus/publisher/games/{id}/delete` | Removes a game through the MVC dashboard |
+| POST | `/pcplus/publisher/reviews/{id}/reply` | Adds a publisher reply to a review |
+| POST | `/pcplus/publisher/reviews/{id}/delete` | Deletes a review from a publisher-owned game |
+| GET | `/pcplus/publisher/logout` | Logs out the publisher |
 
 ## Use Case Mapping
 
 ### Customer Use Cases
 
-| Use Case | Related Pages or Endpoints |
+| Use Case | MVC Page or API Endpoint |
 |---|---|
 | Create an account | `/pcplus/signup`, `/api/auth/signup` |
-| Login | `/pcplus/login`, `/api/auth/login` |
-| Browse the catalog | `/pcplus/catalog`, `/api/games` |
-| View details for a game | `/pcplus/games/{gameId}`, `/api/games/{id}` |
-| Add a game to cart | `/pcplus/cart`, `/api/cart/{gameId}` |
-| Checkout cart | `/pcplus/cart`, `/api/library/checkout` |
-| View purchased games | `/pcplus/library`, `/api/library` |
-| Write a review | `/pcplus/games/{gameId}`, `/api/games/{gameId}/reviews` |
+| Log in | `/pcplus/login`, `/api/auth/login` |
 | Reset password | `/pcplus/forgot-password`, `/api/auth/reset-password` |
+| Browse catalog | `/pcplus/catalog`, `/api/games` |
+| Search catalog | `/pcplus/catalog?search=`, `/api/games/search?q=` |
+| View game details | `/pcplus/games/{id}`, `/api/games/{id}` |
+| Add game to cart | `/pcplus/cart/add/{id}`, `/api/cart` |
+| Remove game from cart | `/pcplus/cart/remove/{id}`, `/api/cart/{gameId}` |
+| Checkout cart | `/pcplus/cart/checkout`, `/api/library/checkout` |
+| Buy one game | `/pcplus/games/{id}/buy`, `/api/library/buy/{gameId}` |
+| View library | `/pcplus/library`, `/api/library` |
+| Leave review | `/pcplus/games/{id}/reviews`, `/api/games/{gameId}/reviews` |
+| Update profile or avatar | `/pcplus/profile`, `/api/auth/avatar` |
 
 ### Publisher Use Cases
 
-| Use Case | Related Pages or Endpoints |
+| Use Case | MVC Page or API Endpoint |
 |---|---|
-| Create an account | `/pcplus/signup`, `/api/auth/signup` |
-| Login | `/pcplus/login`, `/api/auth/login` |
-| View publisher dashboard | `/pcplus/publisher/dashboard` |
-| Add a game | `/pcplus/publisher/games/new` |
-| Edit a game | `/pcplus/publisher/games/{gameId}/edit` |
-| Remove a game | `/pcplus/publisher/games/{gameId}/delete` |
-| View sales | `/pcplus/publisher/dashboard` |
-| Delete a review | `/pcplus/publisher/reviews/{reviewId}/delete` |
-| Reply to a review | `/pcplus/publisher/reviews/{reviewId}/reply` |
-
-## Demo Login Accounts
-
-If the database is seeded with the following accounts, they can be used to test the application.
-
-| Actor | Email | Password | PIN |
-|---|---|---|---|
-| Customer | customer | customer | 0000 |
-| Publisher | publisher | publisher | 0000 |
-
-If these login accounts do not work, they can be created via the signup page for the application. Additionally, there is an optional script to fix the database if it was created with an older version of the PC+ application.
+| Create a publisher account | `/pcplus/publisher/signup`, `/api/auth/signup` |
+| Log in as publisher | `/pcplus/login`, `/api/auth/login` |
+| View publisher dashboard | `/pcplus/publisher/dashboard`, `/api/publisher/dashboard` |
+| Add game | `/pcplus/publisher/games/new`, `/pcplus/publisher/games`, `/api/publisher/games` |
+| Edit game | `/pcplus/publisher/games/{id}/edit`, `/pcplus/publisher/games/{id}`, `/api/publisher/games/{id}` |
+| Remove game | `/pcplus/publisher/games/{id}/delete`, `/api/publisher/games/{id}` |
+| View sales and review data | `/pcplus/publisher/dashboard`, `/api/publisher/dashboard`, `/api/publisher/reviews` |
+| Reply to review | `/pcplus/publisher/reviews/{id}/reply`, `/api/games/{gameId}/reviews/{reviewId}/reply` |
+| Delete review | `/pcplus/publisher/reviews/{id}/delete`, `/api/games/{gameId}/reviews/{reviewId}` |
 
 ## Presentation Demo Plan
 
-To run the project, start the Spring Boot application on the local machine with the database credentials configured. Afterwards, present the project via the MVC website.
+### Customer Demo
 
-The following is a suggested series of steps to demonstrate the customer features of the application:
+1. Open `http://localhost:8081/pcplus/catalog`.
+2. Log in or create a customer account.
+3. Open a game detail page.
+4. Add the game to the cart.
+5. Open the cart.
+6. Checkout.
+7. Open the library and show that the game appears there.
+8. Show Neon tables such as `users`, `cart_items`, and `purchases` to prove persistence.
 
-1. Navigate to the catalog
-2. Log in as a customer
-3. View the details of a game
-4. Add the game to the cart
-5. Navigate to the cart
-6. Checkout the cart
-7. View the game in the library
-8. Confirm that the data is persisted in the Neon database
+### Publisher Demo
 
-The following is a suggested series of steps to demonstrate the publisher features of the application:
+1. Log in or create a publisher account.
+2. Open the publisher dashboard.
+3. Add or edit a game.
+4. Return to the customer catalog and show the game update.
+5. Reply to or delete a review for a publisher-owned game.
+6. Show Neon tables such as `games` and `reviews` to prove persistence.
 
-1. Log in as a publisher
-2. View the publisher dashboard
-3. Add or edit a game
-4. View the game on the customer catalog website
-5. View sales and review information for the game published by the publisher
-6. Reply to or delete a review for the game
-7. Confirm that the data is persisted in the Neon database
+## Demo Login Accounts
 
-## Project Notes
+If the database is seeded with the following accounts, they can be used for testing.
 
-The PC+ application utilizes a live database hosted on Neon. The password for the database is not to be committed to the repository.
+| Actor | Email | Password | PIN |
+|---|---|---|---|
+| Customer | `customer` | `customer` | `0000` |
+| Publisher | `publisher` | `publisher` | `0000` |
 
-The application utilizes FreeMarker templates for the MVC website frontend.
-
-Tailwind CSS is utilized for the website styling and is loaded from the CDN.
-
-The main actors for this project are the customers and publishers.
-
-The SysAdmin endpoints for the application are outside of the scope of this project.
-
-## How to Run
-
-From the root project folder, run:
-
-./mvnw spring-boot:run
-
-On Windows PowerShell, run:
-
-.\mvnw spring-boot:run
-
-Then open the site at: http://localhost:8081/pcplus
-
-Once you confirm it works, stop the server in the terminal with: Ctrl + C
-
-Then type: Y
+If those accounts do not work, create new accounts from the signup pages.

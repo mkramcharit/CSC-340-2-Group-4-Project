@@ -1,351 +1,399 @@
-Requirements – Starter Template
+# PC+ Software Requirements Specification
 
-Project Name: PC+
-Team: Michael Ramcharitar, Eddy Arriaga-Barrientos
-Course: CSC 340
-Version: 1.0
-Date: 2026-02-08
+## Project Information
 
+Project Name: PC+  
+Team: Michael Ramcharitar, Eddy Arriaga-Barrientos  
+Course: CSC 340  
+Version: Final Submission  
 
-1. Overview
+## 1. Overview
 
-Vision:
-PC+ is a web-based application that lets users browse a catalog of games, view detailed game pages, simulate purchasing games, and maintain a library of purchased games, while allowing publishers to manage game listings and respond to reviews.
+### Vision
 
+PC+ is a web-based digital game storefront that lets customers browse games, view game details, simulate purchases, manage a purchased library, and write reviews. The system also lets publishers manage their own game listings, view sales and review information, reply to reviews, and delete reviews on their games.
 
-Glossary (Terms used in the project):
+### Implemented Actors
 
-Catalog:
-The collection of all games on the platform.
+| Actor | Description |
+|---|---|
+| Customer | Browses games, manages a cart, checks out, views a library, updates profile information, and reviews purchased games |
+| Publisher / Provider | Adds, edits, removes, and manages their own game listings, views dashboard statistics, and manages reviews on their games |
 
-Library:
-The list of games owned by a user after completing a simulated purchase.
+SysAdmin functionality was discussed earlier in the project but is outside the final implemented scope.
 
-Simulated Checkout:
-The fictitious purchasing process that gives the user ownership of the purchased game.
+### Glossary
 
-Provider:
-A publisher or developer who uploads and maintains games on the platform.
+| Term | Meaning |
+|---|---|
+| Catalog | The collection of live games available to customers |
+| Cart | A temporary list of games the customer plans to purchase |
+| Library | The customer's purchased games after simulated checkout |
+| Simulated Checkout | The purchase process that creates database purchase records without real payment processing |
+| Publisher / Provider | A user who owns and manages game listings |
+| Review | Customer feedback for a purchased game |
 
-Customer:
-A user who browses, purchases (simulates) and reviews games.
+## 2. Scope
 
+### In Scope
 
-Primary Users / Roles:
+- Customer signup, login, logout, profile update, avatar update, and password reset by PIN
+- Publisher signup, login, logout, dashboard access, and publisher game management
+- Game catalog browsing, searching, and game detail pages
+- Cart and simulated checkout
+- Purchased game library
+- Customer reviews for owned games
+- Publisher replies to reviews
+- Publisher deletion of reviews on their own games
+- PostgreSQL persistence through Neon
+- MVC pages using FreeMarker templates
+- API endpoints for catalog, auth, cart, library, reviews, and publisher actions
 
-Customer:
-Browses for games, simulates purchasing games, maintains a library of purchased games, reviews games.
-
-Provider:
-Uploads and maintains games, views basic statistics, responds to reviews.
-
-SysAdmin (optional):
-Maintains system integrity and manages system-level settings.
-
-
-Scope (this semester):
-
-- User registration, login and logout
-- Browsing a game catalog and viewing game details
-- Simulated purchase process
-- View and manage a library of purchased games
-- Customer reviews, provider responses
-- Game management by provider, basic statistics
-
-
-Out of Scope (deferred):
+### Out of Scope
 
 - Real payment processing
-- Actual game download or DRM
+- Real game downloads or DRM
+- SysAdmin dashboard or system-wide moderation tools
 - Advanced recommendation algorithms
-- Social features beyond reviews
+- Social features outside of reviews
 
-This document is requirements-level.
-Design decisions (UI, API, schema) are documented separately.
+## 3. Functional Requirements and Use Cases
 
+## 3.1 Customer Use Cases
 
-2. Functional Requirements (User Stories)
+### US-CUST-001 Create Customer Account
 
-Each story follows the format:
-As a role, I want a capability, so that I receive a benefit.
-Each story will have at least one Given / When / Then acceptance scenario.
+As a customer, I want to create an account so that I can log in and use customer features.
 
+Acceptance Scenario:
 
-2.1 Customer Stories
+Given I am not logged in  
+When I submit valid signup information  
+Then a new customer account is created and saved in the database
 
+Implementation Mapping:
 
-US-CUST-001 – Register and Log In
+- MVC: `/pcplus/signup`
+- API: `POST /api/auth/signup`
+- Main files: `CustomerPageController`, `AuthController`, `AuthService`, `UserRepository`, `customer-signup.ftlh`
 
-Story:
-As a customer, I want to register for an account and log in, so that I can manage my account and library of purchased games.
+### US-CUST-002 Log In
 
-Acceptance:
-Scenario: Register with valid credentials
-Given I am not logged in
-When I submit valid registration information
-Then my account is created and I am logged in
+As a customer, I want to log in so that I can access my cart, library, profile, and review features.
 
+Acceptance Scenario:
 
+Given I have an active account  
+When I submit the correct login credentials  
+Then I am logged in and redirected to the proper customer page
 
-US-CUST-002 – Browse Game Catalog
+Implementation Mapping:
 
-Story:
-As a customer, I want to browse the catalog of available games so that I can choose which ones to purchase.
+- MVC: `/pcplus/login`
+- API: `POST /api/auth/login`
+- Main files: `CustomerPageController`, `AuthController`, `AuthService`, `UserRepository`, `customer-login.ftlh`
 
-Acceptance:
-Scenario: View game catalog
-Given games exist in the catalog
-When I view the catalog page
-Then I see a list of available games with titles, prices, and images
+### US-CUST-003 Reset Password
 
+As a customer, I want to reset my password with my email and PIN so that I can recover access to my account.
 
+Acceptance Scenario:
 
-US-CUST-003 – View Game Details
+Given I know my account email and PIN  
+When I submit a new password  
+Then my password is updated in the database
 
-Story:
-As a customer, I want to view the details of a specific game so that I can make an informed purchasing decision.
+Implementation Mapping:
 
-Acceptance:
-Scenario: Open game detail page
-Given a game is selected from the catalog
-When I request to view the game details
-Then I see the game's description, price, images, and average rating
+- MVC: `/pcplus/forgot-password`
+- API: `POST /api/auth/reset-password`
+- Main files: `CustomerPageController`, `AuthController`, `AuthService`, `UserRepository`, `customer-forgot-password.ftlh`
 
+### US-CUST-004 Browse and Search Catalog
 
+As a customer, I want to browse and search the catalog so that I can find games I may want to buy.
 
-US-CUST-004 – Simulated Purchase
+Acceptance Scenario:
 
-Story:
-As a customer, I want to purchase a game so that it is added to my library of purchased games.
+Given live games exist in the catalog  
+When I open the catalog page or search by keyword  
+Then I see matching game listings with titles, images, prices, and rating information
 
-Acceptance:
-Scenario: Complete simulated purchase process
-Given I have selected a game to purchase
-When I complete the checkout process
-Then the game is added to my library of purchased games
+Implementation Mapping:
 
+- MVC: `/pcplus/catalog`
+- API: `GET /api/games`, `GET /api/games/search?q=`
+- Main files: `CustomerPageController`, `GameController`, `GameService`, `GameRepository`, `customer-catalog.ftlh`
 
+### US-CUST-005 View Game Details
 
-US-CUST-005 – Leave a Review
+As a customer, I want to view a game's detail page so that I can see more information before buying it.
 
-Story:
-As a customer, I want to leave a review for a game I have purchased so that I can share my thoughts with other customers.
+Acceptance Scenario:
 
-Acceptance:
-Scenario: Submit a review for a game
-Given I have purchased the game
-When I submit a review for the game
-Then my review is displayed on the game's detail page
+Given a game exists  
+When I open the game detail page  
+Then I see the game's description, price, images, system requirements, rating, and reviews
 
+Implementation Mapping:
 
+- MVC: `/pcplus/games/{id}`
+- API: `GET /api/games/{id}`, `GET /api/games/{gameId}/reviews`
+- Main files: `CustomerPageController`, `GameController`, `ReviewController`, `GameService`, `ReviewService`, `customer-game-details.ftlh`
 
-US-CUST-006 – View Purchased Library
+### US-CUST-006 Add Game to Cart
 
-Story:
-As a customer, I want to view my purchased game library so that I can easily see the games I own.
+As a customer, I want to add a game to my cart so that I can buy it during checkout.
 
-Acceptance:
-Scenario: View library
-Given I am logged in and have purchased games
-When I open my library page
-Then I see all games associated with my account
+Acceptance Scenario:
 
+Given I am logged in as a customer  
+When I add a game to the cart  
+Then a cart item is created unless I already own the game or already have it in the cart
 
+Implementation Mapping:
 
-US-CUST-007 – Prevent Duplicate Purchases
+- MVC: `/pcplus/cart/add/{id}`
+- API: `POST /api/cart`
+- Main files: `CustomerPageController`, `CartController`, `CartService`, `CartItemRepository`, `PurchaseRepository`
 
-Story:
-As a customer, I want the system to prevent me from purchasing the same game twice so that my library stays accurate.
+### US-CUST-007 Remove Game from Cart
 
-Acceptance:
-Scenario: Attempt duplicate purchase
-Given I already own a game
-When I attempt to purchase the same game again
-Then the system prevents the purchase and informs me that I already own the game
+As a customer, I want to remove a game from my cart so that I can change what I plan to buy.
 
+Acceptance Scenario:
 
+Given I have a game in my cart  
+When I remove it  
+Then the cart item is deleted from my cart
 
-2.2 Provider Stories
+Implementation Mapping:
 
+- MVC: `/pcplus/cart/remove/{id}`
+- API: `DELETE /api/cart/{gameId}`
+- Main files: `CustomerPageController`, `CartController`, `CartService`, `CartItemRepository`, `customer-cart.ftlh`
 
-US-PROV-001 – Manage Provider Profile
+### US-CUST-008 Checkout Cart
 
-Story:
-As a provider, I want to manage my provider profile so that my publisher details are up to date.
+As a customer, I want to check out my cart so that the games are added to my library.
 
-Acceptance:
-Scenario: Update profile information
-Given I am logged in as a provider
-When I submit my updated profile information
-Then my profile information is updated
+Acceptance Scenario:
 
+Given I have games in my cart  
+When I complete checkout  
+Then purchase records are created and the cart is cleared
 
+Implementation Mapping:
 
-US-PROV-002 – Add Game Listings
+- MVC: `/pcplus/cart/checkout`
+- API: `POST /api/library/checkout`
+- Main files: `CustomerPageController`, `PurchaseController`, `PurchaseService`, `PurchaseRepository`, `CartItemRepository`, `customer-cart.ftlh`
 
-Story:
-As a provider, I want to add new game listings to the catalog so that customers can purchase my games.
+### US-CUST-009 View Library
 
-Acceptance:
-Scenario: Add a new game listing
-Given I am logged in as a provider
-When I submit details for my new game including required fields
-Then it appears in the game catalog
+As a customer, I want to view my library so that I can see the games I purchased.
 
+Acceptance Scenario:
 
+Given I have purchased games  
+When I open the library page  
+Then I see the games connected to my account through purchase records
 
-US-PROV-003 – View Game Statistics
+Implementation Mapping:
 
-Story:
-As a provider, I want to view basic statistics about my games so that I can see how they are performing.
+- MVC: `/pcplus/library`
+- API: `GET /api/library`
+- Main files: `CustomerPageController`, `PurchaseController`, `PurchaseService`, `PurchaseRepository`, `customer-library.ftlh`
 
-Acceptance:
-Scenario: View statistics for my game
-Given my game is listed in the catalog
-When I access my game's statistics page
-Then I see information about download counts, ratings, and review totals
+### US-CUST-010 Write Review
 
+As a customer, I want to review a game I own so that I can share feedback.
 
+Acceptance Scenario:
 
-US-PROV-004 – Respond to Reviews
+Given I own the game  
+When I submit a rating and review body  
+Then the review is saved and appears on the game detail page
 
-Story:
-As a provider, I want to respond to customer reviews so that I can address their concerns publicly.
+Implementation Mapping:
 
-Acceptance:
-Scenario: Respond to a review from a customer
-Given there is an existing review for one of my games
-When I submit my response to the review
-Then it appears below the review on the game's detail page
+- MVC: `/pcplus/games/{id}/reviews`
+- API: `POST /api/games/{gameId}/reviews`
+- Main files: `CustomerPageController`, `ReviewController`, `ReviewService`, `ReviewRepository`, `PurchaseRepository`, `customer-game-details.ftlh`
 
+### US-CUST-011 Update Profile and Avatar
 
+As a customer, I want to update my profile and avatar so that my account information is current.
 
-US-PROV-005 – Edit Existing Game Listing
+Acceptance Scenario:
 
-Story:
-As a provider, I want to edit an existing game listing so that I can update its price or description.
+Given I am logged in  
+When I submit profile or avatar changes  
+Then the updated information is saved and displayed in the UI
 
-Acceptance:
-Scenario: Update game listing
-Given I am logged in as a provider and own a listed game
-When I update the game information
-Then the changes are reflected in the catalog and detail page
+Implementation Mapping:
 
+- MVC: `/pcplus/profile`
+- API: `PATCH /api/auth/avatar`
+- Main files: `CustomerPageController`, `AuthController`, `AuthService`, `UserRepository`, `customer-profile.ftlh`
 
+## 3.2 Publisher Use Cases
 
-US-PROV-006 – Define System Requirements
+### US-PUB-001 Create Publisher Account
 
-Story:
-As a provider, I want to define minimum system requirements for my game so that customers understand hardware expectations.
+As a publisher, I want to create a publisher account so that I can manage game listings.
 
-Acceptance:
-Scenario: Add system requirements
-Given I am logged in as a provider and own a listed game
-When I submit minimum system requirements
-Then the requirements are saved and displayed on the game detail page
+Acceptance Scenario:
 
+Given I am not logged in  
+When I submit valid publisher signup information  
+Then a publisher account is created and saved in the database
 
+Implementation Mapping:
 
-2.3 SysAdmin Stories
+- MVC: `/pcplus/publisher/signup`
+- API: `POST /api/auth/signup`
+- Main files: `PublisherPageController`, `AuthController`, `AuthService`, `UserRepository`, `publisher-signup.ftlh`
 
+### US-PUB-002 Log In as Publisher
 
-US-ADMIN-001 – Moderate Reviews
+As a publisher, I want to log in so that I can reach the publisher dashboard.
 
-Story:
-As a SysAdmin, I want to moderate customer reviews on the site so that any inappropriate content is removed promptly.
+Acceptance Scenario:
 
-Acceptance:
-Scenario: Remove an inappropriate review
-Given a review violates site policies
-When I process its removal
-Then it is no longer displayed on the site
+Given I have a publisher account  
+When I submit the correct login credentials  
+Then I am redirected to the publisher dashboard
 
+Implementation Mapping:
 
+- MVC: `/pcplus/login`
+- API: `POST /api/auth/login`
+- Main files: `CustomerPageController`, `AuthController`, `AuthService`, `UserRepository`, `customer-login.ftlh`
 
-US-ADMIN-002 – Manage User Accounts
+### US-PUB-003 View Publisher Dashboard
 
-Story:
-As a SysAdmin, I want to manage user accounts on the site so that it remains secure for all users.
+As a publisher, I want to view a dashboard so that I can manage my games and see basic sales/review information.
 
-Acceptance:
-Scenario: Remove an account belonging to a user violating site policies 
-Given a user has violated site policies 
-When I identify their account 
-Then their account is placed into an inactive state
+Acceptance Scenario:
 
+Given I am logged in as a publisher  
+When I open the publisher dashboard  
+Then I see my games, sales information, and reviews for games I published
 
+Implementation Mapping:
 
-US-ADMIN-003 – Enforce Role-Based Access
+- MVC: `/pcplus/publisher/dashboard`
+- API: `GET /api/publisher/dashboard`, `GET /api/publisher/reviews`
+- Main files: `PublisherPageController`, `PublisherController`, `PublisherService`, `GameRepository`, `ReviewRepository`, `PurchaseRepository`, `publisher-dashboard.ftlh`
 
-Story:
-As a SysAdmin, I want the system to enforce role-based access control so that users cannot perform actions outside their role.
+### US-PUB-004 Add Game
 
-Acceptance:
-Scenario: Unauthorized action attempt
-Given a customer attempts to access provider-only functionality
-When the action is requested
-Then the system denies access
+As a publisher, I want to add a new game so that customers can see it in the catalog.
 
+Acceptance Scenario:
 
+Given I am logged in as a publisher  
+When I submit a valid game form  
+Then the game is saved with me as the owner and appears in the catalog
 
-3. Non-Functional Requirements
+Implementation Mapping:
 
-Performance / Usability:
+- MVC: `/pcplus/publisher/games/new`, `/pcplus/publisher/games`
+- API: `POST /api/publisher/games`
+- Main files: `PublisherPageController`, `PublisherController`, `PublisherService`, `GameRepository`, `publisher-game-form.ftlh`
 
-Pages must load within 2 seconds even under typical use by academic users.
-(If we set up separate testing accounts for instructors, we may allow more time.)
+### US-PUB-005 Edit Game
 
-Availability and Reliability:
+As a publisher, I want to edit one of my games so that its information stays accurate.
 
-The system must be available 99 percent of the time for auditing purposes.
-We can negotiate what this means for reliability. (Internal testing?)
+Acceptance Scenario:
 
-Security and Privacy:
+Given I own a game listing  
+When I update its information  
+Then the catalog displays the updated information
 
-All user authentication and accounts must be protected from unauthorized access.
-Do we care about subsequent attempts at misuse?
+Implementation Mapping:
 
-Other:
+- MVC: `/pcplus/publisher/games/{id}/edit`, `/pcplus/publisher/games/{id}`
+- API: `PUT /api/publisher/games/{id}`
+- Main files: `PublisherPageController`, `PublisherController`, `PublisherService`, `GameRepository`, `publisher-game-form.ftlh`
 
-The system should be easy to use by anyone who has not used it before.
-A first-time user should be able to browse the system and simulate purchase of an item without external help.
+### US-PUB-006 Remove Game
 
+As a publisher, I want to remove one of my games so that it no longer appears as an active listing.
 
-4. Assumptions, Constraints, and Policies
+Acceptance Scenario:
 
-We need to define explicit or implicit assumptions, constraints (if any), and policies regarding these functions.
+Given I own a game listing  
+When I delete it from the dashboard  
+Then it is removed from the publisher's active management view and no longer shown as a normal live listing
 
-- Only registered and authenticated users can purchase products or leave reviews.
-- No real monetary transactions will take place.
-- Providers will only be able to manage products they themselves provided.
-- No limits on product availability or purchases per day / week / semester.
-- The app will only be used for educational purposes.
+Implementation Mapping:
 
+- MVC: `/pcplus/publisher/games/{id}/delete`
+- API: `DELETE /api/publisher/games/{id}`
+- Main files: `PublisherPageController`, `PublisherController`, `PublisherService`, `GameRepository`, `publisher-dashboard.ftlh`
 
-5. Milestones (course-related)
+### US-PUB-007 Reply to Reviews
 
-This will match course milestones yet to come.
-Use existing repository structures or create new ones as needed.
+As a publisher, I want to reply to reviews on my games so that I can respond to customer feedback.
 
+Acceptance Scenario:
 
-M2 Requirements:
-This SRS opened as an issue.
+Given a customer has reviewed one of my games  
+When I submit a publisher reply  
+Then the reply appears with the review
 
-M3 High-fidelity Prototype: Core customer/provider functions are fully functional but not final.
+Implementation Mapping:
 
-M4 Design Architecture & Schemas defined 
+- MVC: `/pcplus/publisher/reviews/{id}/reply`
+- API: `PUT /api/games/{gameId}/reviews/{reviewId}/reply`
+- Main files: `PublisherPageController`, `ReviewController`, `ReviewService`, `ReviewRepository`, `publisher-dashboard.ftlh`
 
-M5 Backend API: Some key endpoints implemented. Unit tests defined. 
+### US-PUB-008 Delete Reviews
 
-M6 Increment: Use cases completed in any state needed for review  
+As a publisher, I want to delete reviews on my games so that I can remove unwanted review entries from my dashboard/game pages.
 
-M7 Final: Complete system
+Acceptance Scenario:
 
+Given a review exists on one of my games  
+When I delete the review  
+Then it is marked removed and no longer displayed as a normal active review
 
-6. Change Management
+Implementation Mapping:
 
-We create issues regarding alterations. Changes are reviewed and mergeable.
-If changes disrupt this requirement document's accuracy but are major,
-changes must also update this requirements document.
+- MVC: `/pcplus/publisher/reviews/{id}/delete`
+- API: `DELETE /api/games/{gameId}/reviews/{reviewId}`
+- Main files: `PublisherPageController`, `ReviewController`, `ReviewService`, `ReviewRepository`, `publisher-dashboard.ftlh`
 
-This area contains any rules related to requirements management in general.
+## 4. Nonfunctional Requirements
+
+| Category | Requirement |
+|---|---|
+| Usability | The UI should be clear enough for first-time users to browse, buy, and manage games without outside help |
+| Reliability | Customer and publisher actions should persist to the Neon database |
+| Security | Passwords should be stored as hashes, role-based pages should require the correct role, and database passwords should not be committed to GitHub |
+| Maintainability | The system should keep controller, service, repository, model, and template responsibilities separate |
+| Performance | Pages should load quickly enough for live classroom demonstration and normal academic testing |
+
+## 5. Data Requirements
+
+The final application uses the following main model classes:
+
+| Model | Purpose |
+|---|---|
+| User | Stores customer and publisher accounts |
+| Game | Stores game listings and publisher ownership |
+| CartItem | Stores games temporarily added to a customer's cart |
+| Purchase | Stores simulated purchases and library ownership |
+| Review | Stores customer reviews and publisher replies |
+
+## 6. Assumptions and Constraints
+
+- A user must be authenticated to purchase games, access a cart, view a library, or write reviews.
+- Publishers can only manage games they own.
+- Customers can only review games they have purchased.
+- Customers should not be able to purchase the same game twice.
+- Real money is not processed.
+- The project is for CSC 340 educational use.
